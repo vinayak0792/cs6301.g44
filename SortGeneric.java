@@ -54,30 +54,21 @@ public class SortGeneric {
 	static <T extends Comparable<? super T>> void mergeSort(T[] arr, T[] tmp) {
 		mergeSor(arr, tmp, 0, arr.length - 1);
 	}
-//	
-//	static<T> void randomNumbers(T[] arr ,int n){
-//		
-//	}
+
 
 	public static void main(String[] args) {
+		Timer t = new Timer();
 		Integer a[] = new Integer[15000000];
 		for (int i = 0; i < a.length; i++)
 			a[i] = 0 + (int) (Math.random() * ((1000000 - 0) + 1));
+		
 		int length = a.length;
 		Integer[] aux = new Integer[length];
-		aux[aux.length - 2] = 0;
-		aux[aux.length - 1] = a.length - 1;
-		System.out.println("Start");
-		long startTime = System.currentTimeMillis();
+		
+		t.start();
 		mergeSort(a, aux);
-		long estimatedTime = System.currentTimeMillis() - startTime;
-		System.out.println("OlogN estimated time= " + estimatedTime);
-		for (int i = 0; i < a.length; i++)
-			a[i] = 0 + (int) (Math.random() * ((100000 - 0) + 1));
-		startTime = System.currentTimeMillis();
-		doInsertionSort(a);
-		estimatedTime = System.currentTimeMillis() - startTime;
-		System.out.println("N square estimated time= " + estimatedTime);
+		System.out.println(t.end());
+
 
 	}
 }
