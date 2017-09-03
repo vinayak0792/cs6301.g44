@@ -14,13 +14,14 @@ public class NSquareSort {
 		int size = in.nextInt();
 		Timer t = new Timer();
 		Integer arr[] = new Integer[size];
-
+                
+		//Inserting random numbers into the input array
 		for (int i = 0; i < size; i++)
 			arr[i] = 0 + (int) (Math.random() * ((1000000 - 0) + 1));
 
 		t.start();
 		Sort.nSquareSort(arr);
-		System.out.println(t.end());
+		System.out.println(t.end()); //printing the time taken to run the algorithm
 
 	}
 }
