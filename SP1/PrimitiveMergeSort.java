@@ -16,7 +16,7 @@ public class PrimitiveMergeSort {
 		int size = in.nextInt();
 		Timer t = new Timer();
 		int arr[] = new int[size];
-		//
+		//inserting random numers into the array
 		for (int i = 0; i < size; i++)
 			arr[i] = 0 + (int) (Math.random() * ((1000000 - 0) + 1));
 
