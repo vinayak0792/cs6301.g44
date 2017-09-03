@@ -7,7 +7,7 @@ package cs6301.g44;
 
 public class Sort {
 
-	
+	//merge function for integer mergesort
 	static void merge(int[] arr, int[] tmp, int low, int mid, int high) {
 		int k = low;
 		int j = mid + 1;
@@ -28,7 +28,8 @@ public class Sort {
 		}
 
 	}
-
+        
+	//insertion sort
 	static void nSquareSort(int[] arr) {
 		int temp;
 		int j;
@@ -43,7 +44,8 @@ public class Sort {
 			arr[j + 1] = temp;
 		}
 	}
-
+         
+	//generic insertion sort
 	static <T extends Comparable<? super T>> void nSquareSort(T[] arr) {
 		T temp;
 		int j;
@@ -106,7 +108,7 @@ public class Sort {
 
 
 	static void mergeSort(int[] arr, int[] tmp) {
-		System.out.println("int merge sort");
+		//System.out.println("int merge sort");
 		mergeUtil(arr, tmp, 0, arr.length - 1);
 	}
 
