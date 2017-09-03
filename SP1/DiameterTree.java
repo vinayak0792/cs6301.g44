@@ -25,12 +25,12 @@ public class DiameterTree {
 		return adj;
 	}
 
-	// Returns true if the graph contains a cycle, else false.
+	// Checks if graph contains cycle or not.
 	public static Boolean checkCyclic(Graph g) {
 		int numVertices = g.n;
 		boolean visited[] = new boolean[numVertices];
 
-		// function detect cycles in different parts of graph
+		// To detect cycles in all parts of graph
 		for (int u = 0; u < numVertices; u++)
 			if (!visited[u]) // Don't recur for u if already visited
 				if (isCyclic(u, visited, -1, g))
@@ -38,11 +38,12 @@ public class DiameterTree {
 
 		return false;
 	}
-
+        
+	//recursive function to find cycle
 	public static Boolean isCyclic(int v, boolean visited[], int parent, Graph g) {
 		// current node is marked as visited
 		visited[v] = true;
-		// Recur for all the vertices adjacent to this vertex
+		// Do this for all adjacent vertices
 		List<Graph.Vertex> it = getAdjacentVertices(g.getVertex(v + 1));
 		for (Graph.Vertex x : it) {
 
@@ -51,8 +52,7 @@ public class DiameterTree {
 					return true;
 			}
 
-			// If an adjacent is visited and not parent of current
-			// vertex, then there is a cycle.
+			// If an adjacent vertex is visited and its not the parent then graph contains cycle
 			else if (x.name != parent)
 				return true;
 		}
@@ -67,13 +67,12 @@ public class DiameterTree {
 		// Create a queue for BFS
 		LinkedList<Graph.Vertex> queue = new LinkedList<Graph.Vertex>();
 
-		// Mark the current node as visited and enqueue it
+		// Mark the current node as visited and add it to queue
 		visited[s.name] = true;
 		queue.add(s);
 		temp = s;
 		parent[s.name] = INF;
 		while (queue.size() != 0) {
-			// Dequeue a vertex from queue
 			s = queue.poll();
 			temp = s;
 
