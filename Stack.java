@@ -13,7 +13,7 @@ public class Stack<T> {
     
     Stack(int size){
         this.size = size;
-        bstack = new T[size-1];
+        bstack = new T[size];
     }
     
     void push(T item) throws Exception{
@@ -48,7 +48,7 @@ public class Stack<T> {
     public String toString(){
         for(int i = top;i >= 0; i--)
             System.out.println((i+1)+" "+bstack[i]);
-        return null;
+        return "end";
     }
     
 }
