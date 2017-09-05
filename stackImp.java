@@ -10,11 +10,14 @@ public class stackImp {
 
     public static void main(String []args) throws Exception{
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter the stack size");
+        System.out.println("Enter the stack size ");
         Stack<String> stk = new Stack(in.nextInt());
         stk.push("abc");
+        stk.push("def");
         stk.push("xyz");
-        stk.toString();
+        stk.push("xyz2");
+        stk.pop();
+        System.out.print(stk);
         
     }
 }
