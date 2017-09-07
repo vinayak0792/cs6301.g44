@@ -6,16 +6,19 @@
 package cs6301.g44;
 import java.util.EmptyStackException;
 
+/* Stack class of generic type implemented using an array*/
 public class Stack<T> {
     final int size;
     T[] bstack;
     int top = -1;
     
+    /* Stack constructor takes size from the user */
     Stack(int size){
         this.size = size;
-        bstack = new T[size];
+        bstack = (T[])new Object[size];
     }
     
+    /* push an item into the stack if array size not reached*/
     void push(T item) throws Exception{
         int temp = top+1;
         if(temp >= size){
@@ -28,16 +31,18 @@ public class Stack<T> {
     
     }
     
-    void pop(){
+    /* pop an item from the stack if the stack is not empty */
+    T pop(){
         if(isEmpty()){
             throw new EmptyStackException();
         }
         else{
             top--;
         }
-           
+        return bstack[top+1];
     }
     
+    /* checks if the stack is empty */
     public boolean isEmpty(){
         if(top < 0)
             return true;
@@ -45,10 +50,11 @@ public class Stack<T> {
             return false;
     }
     
+    /* overloading the toString to display the stack top to bottom*/
     public String toString(){
         for(int i = top;i >= 0; i--)
-            System.out.println((i+1)+" "+bstack[i]);
-        return "end";
+            System.out.println(bstack[i]);
+        return "--end--";
     }
     
 }
