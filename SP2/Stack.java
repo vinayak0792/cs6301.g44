@@ -31,7 +31,7 @@ public class Stack<T> {
     
     }
     
-    /* pop an item from the stack if the stack is not empty */
+    /* pop an item from the stack if the stack is not empty and return item */
     T pop(){
         if(isEmpty()){
             throw new EmptyStackException();
