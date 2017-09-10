@@ -14,20 +14,21 @@ public class Queue<T> {
 		currentSize = 16;
 	}
 
-	public void offer(T input) {
+	public boolean offer(T input) {
 		if (currentIndex < currentSize) {
 			resize();
-			queueElements[++currentIndex] = input;
-
-		}
+			queueElements[currentIndex] = input;
+			currentIndex++;
+			return true;
+		} else
+			return false;
 	}
 
 	public T poll() {
 		if (isEmpty()) {
 			return null;
 		} else {
-			T element = queueElements[currentIndex];
-			currentIndex--;
+			T element = queueElements[--currentIndex];
 			resize();
 			return element;
 		}
