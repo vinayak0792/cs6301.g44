@@ -8,16 +8,16 @@ import java.util.EmptyStackException;
 
 /* Stack class of generic type implemented using an array*/
 public class Stack<T> {
-    final int size;
+    final int size;     
     T[] bstack;
     int top = -1;
     
     /* Stack constructor takes size from the user */
-    Stack(int size){
+    Stack(int size){    
         this.size = size;
-        bstack = (T[])new Object[size];
+         bstack = (T[])new Object[size];
     }
-    
+       
     /* push an item into the stack if array size not reached*/
     void push(T item) throws Exception{
         int temp = top+1;
@@ -31,7 +31,7 @@ public class Stack<T> {
     
     }
     
-    /* pop an item from the stack if the stack is not empty */
+    /* pop an item from the stack if the stack is not empty and return item */
     T pop(){
         if(isEmpty()){
             throw new EmptyStackException();
@@ -40,14 +40,13 @@ public class Stack<T> {
             top--;
         }
         return bstack[top+1];
+           
     }
     
     /* checks if the stack is empty */
     public boolean isEmpty(){
-        if(top < 0)
-            return true;
-        else
-            return false;
+        return (top < 0);
+           
     }
     
     /* overloading the toString to display the stack top to bottom*/
