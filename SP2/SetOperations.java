@@ -6,10 +6,16 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Collections;
 /**
+ * Given two linked lists implementing sorted sets, write functions for
+ union, intersection, and set difference of the sets.
 
+ @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
-public class SetOperations {
 
+//Here  lists are assumed to be sets. So no duplicate elements
+
+public class SetOperations {
+    //Utility function
     static<T> T next(Iterator<T> it){
         return (it.hasNext()) ? it.next() : null;
     }
@@ -18,7 +24,7 @@ public class SetOperations {
         Iterator<T> it1 = list1.iterator(), it2 = list2.iterator();
         T item1 = next(it1), item2 = next(it2);
         while (item1 != null  && item2!= null){
-            if (item1.compareTo(item2) < 0){
+            if (item1.compareTo(item2) < 0){    //Add elements only from list1
                 outList.add(item1);
                 item1 = next(it1);
             }else if (item1.compareTo(item2) > 0)
@@ -27,7 +33,7 @@ public class SetOperations {
                 item1 = next(it1);
                 item2 = next(it2);
             }
-        }
+        }//Add remaining elements in list1 to output list
         while (item1 != null){
             outList.add(item1);
             item1 = next(it1);
@@ -42,7 +48,7 @@ public class SetOperations {
                 item1 = next(it1);
             else if (item1.compareTo(item2) > 0)
                 item2 = next(it2);
-            else{
+            else{               //Add elements that are in both lis1 & list2
                 outlist.add(item1);
                 item1 = next(it1);
                 item2 = next(it2);
