@@ -277,7 +277,7 @@ public class Num  implements Comparable<Num> {
     	Num N=a;
 		Num D=b;
 		int count=0;
-		while(N.compareTo(D)==1)
+		while(N.compareTo(D) >= 0)
 		{
 			count++;
 			N=Num.subtract(N, D);
@@ -296,7 +296,7 @@ public class Num  implements Comparable<Num> {
     	Num N=a;
 		Num D=b;
 		int count=0;
-		while(N.compareTo(D)==1)
+		while(N.compareTo(D) >= 0)
 		{
 			count++;
 			N=Num.subtract(N, D);
