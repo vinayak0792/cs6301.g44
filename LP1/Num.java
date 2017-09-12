@@ -307,10 +307,20 @@ public class Num  implements Comparable<Num> {
     }
 
     // Use divide and conquer
-    static Num power(Num a, Num n) {
-    	
-    	
-	return null;
+    static Num power(Num x, Num n) {
+    	Num result=new Num(1);     // Initialize result
+    	 
+        while (n.compareTo(new Num(0)) == 1)
+        {
+            // multiply x with result if y is odd
+            if ( Num.mod(n, new Num(2)).compareTo(new Num(0)) != 0)
+                result = Num.product(result, x);
+     
+            // y is even now
+            n = Num.divide(n,new Num(2)); 
+            x = Num.product(x, x);  // Change x to x^2
+        }
+        return result;
     }
 
     static Num squareRoot(Num a) {
