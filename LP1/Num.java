@@ -8,6 +8,7 @@ public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // This can be changed to what you want it to be.
     long base = 10;  // Change as needed
+    boolean sign;  //true if number is negative
     
     LinkedList<Long> numberList=new LinkedList<Long>();
     
@@ -111,43 +112,7 @@ public class Num  implements Comparable<Num> {
     	return res;
     }
     
-    static LinkedList<Long> linkedSub(LinkedList<Long> a, LinkedList<Long> b, Num z) {
-    	long carry=0,sub=0;
-    	LinkedList<Long> subRes=new LinkedList<Long>();
-    	LinkedList<Long> res=new LinkedList<Long>();
-    	Iterator<Long> it1=a.iterator();
-    	Iterator<Long> it2=b.iterator();
-
-    	while(it2.hasNext())
-		{
-			sub=it1.next()-it2.next()-carry;
-			if(sub<0)
-			{
-				sub=sub+z.base;
-				carry=1;
-			}
-			else
-				carry=0;
-			subRes.add(sub);
-		}
-		while(it1.hasNext())
-		{
-			long x=it1.next();
-			if(x==0 && carry==1)
-			{
-				subRes.add((long)z.base-1);
-				continue;
-			}
-			sub=x-carry;
-			if(it1.hasNext() || sub>0)
-			{
-				subRes.add(sub);
-				carry=0;
-			}
-		}
-		
-    	return subRes;
-    }
+    
     
     static Num subtract(Num a, Num b) {
     	LinkedList<Long> subRes=new LinkedList<Long>();
@@ -193,6 +158,12 @@ public class Num  implements Comparable<Num> {
     			}
     		}
     		
+    	//Removing leading zeroes
+    	while(subRes.getLast()==0)
+    	{
+    		subRes.removeLast();
+    	}
+    		
     		if(a.base==10)
         	{
         		Collections.reverse(subRes);
@@ -201,7 +172,10 @@ public class Num  implements Comparable<Num> {
         		{
         			result=result.append(Long.toString(x).toString());
         		}
-        		return new Num(result.toString());
+        		Num ans=new Num(result.toString());
+        		if(a.compareTo(b)==-1)
+        			ans.sign=true;
+        		return ans;
         	}
         	else
         	{
@@ -214,7 +188,10 @@ public class Num  implements Comparable<Num> {
         		{
         			res1=res1+ (long) Math.pow(a.base, n++)*it.next();
         		}
-        		return new Num(res1);
+        		Num ans=new Num(res1);
+        		if(a.compareTo(b)==-1)
+        			ans.sign=true;
+        		return ans;
         	}
     }
     
@@ -293,11 +270,40 @@ public class Num  implements Comparable<Num> {
 
     /* Start of Level 2 */
     static Num divide(Num a, Num b) {
-	return null;
+    	if(a.compareTo(b)==-1)
+    	{
+    		return new Num(0);
+    	}
+    	Num N=a;
+		Num D=b;
+		int count=0;
+		while(N.compareTo(D)==1)
+		{
+			count++;
+			N=Num.subtract(N, D);
+		}
+    	
+    	
+	return new Num(count);
     }
 
     static Num mod(Num a, Num b) {
-	return null;
+
+    	if(a.compareTo(b)==-1)
+    	{
+    		return a;
+    	}
+    	Num N=a;
+		Num D=b;
+		int count=0;
+		while(N.compareTo(D)==1)
+		{
+			count++;
+			N=Num.subtract(N, D);
+		}
+    	
+    	
+	return N;
     }
 
     // Use divide and conquer
@@ -316,6 +322,11 @@ public class Num  implements Comparable<Num> {
     // Utility functions
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
+    	if(this.sign)
+    	{
+    		if(other.sign==false)
+    			return -1;
+    	}
     	if(this.numberList.size()>other.numberList.size())
     	{
     		return 1;
