@@ -37,10 +37,13 @@ public class LongNumOperations {
 		num1.printList();
 		
 		//Testing Division
-        System.out.println("Division: "+num1+" / "+num2+" = "+Num.divide(num1, num2));
+        	System.out.println("Division: "+num1+" / "+num2+" = "+Num.divide(num1, num2));
         
-      //Testing Modulus
-        System.out.println("Modulus: "+num1+" % "+num2+" = "+Num.mod(num1, num2));
+      		//Testing Modulus
+        	System.out.println("Modulus: "+num1+" % "+num2+" = "+Num.mod(num1, num2));
+		
+		//Testing power
+        	System.out.println("Power: "+num1+" ^ "+num2+" = "+ Num.power(num1, num2));
 	}
-
+	
 }
