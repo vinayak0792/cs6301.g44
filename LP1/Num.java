@@ -1,3 +1,4 @@
+
 package cs6301.g44;
 
 import java.util.Collections;
@@ -18,6 +19,11 @@ public class Num  implements Comparable<Num> {
     	{
     		for(int i=s.length()-1;i>=0;i--)
     		{
+    			if(s.charAt(i)=='-')
+    			{
+    				sign=true;
+    			}
+    			else
     			numberList.add((long) Character.getNumericValue(s.charAt(i)));
     		}
     	}
@@ -309,22 +315,51 @@ public class Num  implements Comparable<Num> {
     // Use divide and conquer
     static Num power(Num x, Num n) {
     	Num result=new Num(1);     // Initialize result
-    	 
-        while (n.compareTo(new Num(0)) == 1)
+    	Num p=n,z=x;
+    	
+        while (p.compareTo(new Num(0)) == 1)
         {
             // multiply x with result if y is odd
-            if ( Num.mod(n, new Num(2)).compareTo(new Num(0)) != 0)
+            if ( Num.mod(p, new Num(2)).compareTo(new Num(0)) != 0)
                 result = Num.product(result, x);
      
             // y is even now
-            n = Num.divide(n,new Num(2)); 
+            p = Num.divide(p,new Num(2)); 
             x = Num.product(x, x);  // Change x to x^2
         }
+        
+        if ( Num.mod(n, new Num(2)).compareTo(new Num(0)) != 0)//if power is odd and number is negative result must be negative
+    		result.sign=z.sign;
+       
         return result;
     }
 
     static Num squareRoot(Num a) {
-	return null;
+    	
+    	if(a.compareTo(new Num(0))==0 || a.compareTo(new Num(1))==0)
+    		return a;
+    	Num start=new Num(1);
+    	Num end=a,ans=new Num(0);
+    	while(start.compareTo(end)!=1)
+    	{
+    		Num mid=Num.add(start, end);        //finding (start+ens)/2
+    		mid=Num.divide(mid, new Num(2));
+    		Num prod=Num.product(mid, mid);
+    		
+    		if(prod.compareTo(a)==0)
+    			return mid;
+    		
+    		if(prod.compareTo(a)==-1)
+    		{
+    			start=Num.add(mid, new Num(1));
+    			ans=mid;
+    		}
+    		else
+    			end=Num.subtract(mid, new Num(1));
+    	}
+    	
+    	
+	return ans;
     }
     /* End of Level 2 */
 
@@ -391,7 +426,11 @@ public class Num  implements Comparable<Num> {
     	{
     		res=res+ (long) Math.pow(base, n++)*it.next();
     	}
-	return Long.toString(res);
+    	String r="-";
+    	if(sign)
+    		return r.concat(Long.toString(res));
+    	else
+	        return Long.toString(res);
     }
 
     public long base() { return base; }
