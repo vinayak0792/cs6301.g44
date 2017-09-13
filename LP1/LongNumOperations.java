@@ -6,9 +6,9 @@ import cs6301.g44.Num;
 public class LongNumOperations {
 	public static void main(String[] args) {
 		
-		Num num1=new Num("80");
-		Num num2=new Num("130");
-		
+		Num num1=new Num("100000000");
+		Num num2=new Num("4");
+		System.out.println(num2);
 		Num res=Num.add(num1,num2);
 		//Testing Addition
 		System.out.println("Addition : "+num1+" + "+num2+" = "+res);
@@ -39,11 +39,18 @@ public class LongNumOperations {
 		//Testing Division
         	System.out.println("Division: "+num1+" / "+num2+" = "+Num.divide(num1, num2));
         
-      		//Testing Modulus
+        //Testing Modulus
         	System.out.println("Modulus: "+num1+" % "+num2+" = "+Num.mod(num1, num2));
 		
 		//Testing power
-        	System.out.println("Power: "+num1+" ^ "+num2+" = "+ Num.power(num1, num2));
+        	Num num3=new Num("-8");
+        	Num res4=Num.power(num3, num2);
+        	System.out.println("Power: "+num3+" ^ "+num2+" = "+res4 );
+        	
+        //Testing squareroot function
+        	System.out.println("Squareroot: "+"root of "+num1+" = "+Num.squareRoot(num1));
+        	
+        	
 	}
 	
 }
