@@ -95,8 +95,6 @@ public class Num  implements Comparable<Num> {
         	}
         	numberList=res;
     	}
-    	
-    	System.out.println(numberList);
     }
     
 
