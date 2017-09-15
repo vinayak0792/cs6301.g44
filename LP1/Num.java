@@ -8,42 +8,96 @@ import java.util.LinkedList;
 public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // This can be changed to what you want it to be.
-    long base = 10;  // Change as needed
+    long base = 90;  // Change as needed
     boolean sign;  //true if number is negative
     
     LinkedList<Long> numberList=new LinkedList<Long>();
     
     /* Start of Level 1 */
-    Num(String s) {
-    	if(base==10)
+//    Num(String s) {
+//    	
+//    	if(base==10)
+//    	{
+//    		for(int i=s.length()-1;i>=0;i--)
+//    		{
+//    			if(s.charAt(i)=='-')
+//    			{
+//    				sign=true;
+//    			}
+//    			else
+//    			numberList.add((long) Character.getNumericValue(s.charAt(i)));
+//    		}
+//    	}
+//    	else
+//    	{
+//    		long remainder,quot;//Quotient and remainder
+//        	long x=Long.parseLong(s);
+//        	quot=x;
+//        	//Converting number to required base and adding each number to LinkedList
+//        	while(quot!=0)
+//        	{
+//        		remainder=quot%base;
+//        		numberList.add(remainder);
+//        		quot=quot/base;
+//        	}
+//    	}
+//    
+//    }
+    
+    
+    Num(String s)
+    {
+    	LinkedList<Long> res=new LinkedList<>();
+    	LinkedList<Long> ten=new LinkedList<>();
+    	if(s.charAt(0)=='-')
     	{
-    		for(int i=s.length()-1;i>=0;i--)
-    		{
-    			if(s.charAt(i)=='-')
-    			{
-    				sign=true;
-    			}
-    			else
-    			numberList.add((long) Character.getNumericValue(s.charAt(i)));
-    		}
+    		sign=true;
+    		s=s.substring(1);
     	}
-    	else
+    	if(s.length()==1)
     	{
-    		long remainder,quot;//Quotient and remainder
-        	long x=Long.parseLong(s);
-        	quot=x;
-        	//Converting number to required base and adding each number to LinkedList
-        	while(quot!=0)
+    		if(s.charAt(0)-'0'>=base)
         	{
-        		remainder=quot%base;
-        		numberList.add(remainder);
-        		quot=quot/base;
+        		res.add((s.charAt(0)-'0')%base);
+        		res.add((s.charAt(0)-'0')/base);
         	}
+        	else
+        		res.add((long) (s.charAt(0)-'0'));
+    		numberList=res;
     	}
     	
+    	else
+    		
+    	{
+    	
+    		if(s.charAt(0)-'0'>=base)
+        	{
+        		res.add((s.charAt(0)-'0')%base);
+        		res.add((s.charAt(0)-'0')/base);
+        	}
+        	else
+        		res.add((long) (s.charAt(0)-'0'));
+        	
+        	if(base>10)
+        		ten.add((long) 10);
+        	else
+        	{
+        		ten.add(10%base);
+        		ten.add(10/base);
+        	}
+        	
+        	LinkedList<Long> tt=new LinkedList<>();
+        	for(int i=1;i<s.length();i++)
+        	{
+        		tt.removeAll(tt);
+        		tt.add((long) (s.charAt(i)-'0'));
+        	res=Num.linkedAdd(Num.linkedProd(res, ten, new Num(5)),tt,new Num(5));	
+        	}
+        	numberList=res;
+    	}
+    	
+    	System.out.println(numberList);
     }
-    
-    
     
 
     Num(long x) {
@@ -202,6 +256,35 @@ public class Num  implements Comparable<Num> {
     }
     
     
+    
+    static LinkedList<Long> linkedProd(LinkedList<Long> a, LinkedList<Long> b,Num yy) {
+    	long carry=0;
+    	int count=-1;
+    	LinkedList<Long> multRes=new LinkedList<Long>();
+		LinkedList<Long> temp=new LinkedList<>();
+    	for(int i=0;i<a.size();i++)   //loop through digits of number a
+		{
+			count++;
+			long x=a.get(i);
+			temp.removeAll(temp);    //deleting all elements of temp linkedlist
+			carry=0;
+			for(int j=0;j<b.size();j++)  //loop through digits of number b
+			{
+				long y=b.get(j); 
+				long sum=x*y+carry;  //finding product
+				temp.add(sum%yy.base);
+				carry=sum/yy.base;
+			}
+			if(carry!=0)
+				temp.add(carry);
+			for(int z=1;z<=count;z++)
+				temp.addFirst((long) 0);  //adding necessary zeroes
+			multRes=linkedAdd(multRes, temp, yy);//adding temp result to previous result
+		}
+    	return multRes;
+    	
+    }
+    
     // Implement Karatsuba algorithm for excellence credit
     static Num product(Num a, Num b) {
     	long carry=0;
@@ -254,6 +337,9 @@ public class Num  implements Comparable<Num> {
     	}
     	
     }
+
+    
+    
 
     // Use divide and conquer
     static Num power(Num a, long y) {
@@ -386,18 +472,19 @@ public class Num  implements Comparable<Num> {
     		int n=0;
             for(int i=0;i<this.toString().length();i++)
             {
-
-            	if(Character.getNumericValue(this.toString().charAt(i))>Character.getNumericValue(other.toString().charAt(i)))
+                if(i<other.toString().length())
+                {
+            	if((this.toString().charAt(i))>(other.toString().charAt(i)))
         		{
         		 n=1;
         		 break;
         		}
-        	 if(Character.getNumericValue(this.toString().charAt(i))<Character.getNumericValue(other.toString().charAt(i)))
+        	 if(this.toString().charAt(i)<other.toString().charAt(i))
         	 {
         		 n=-1;
         		 break;
         	 }
-        	 
+                }
             }
             return n;
     	}
