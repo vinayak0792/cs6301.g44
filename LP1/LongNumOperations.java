@@ -6,22 +6,15 @@ import cs6301.g44.Num;
 public class LongNumOperations {
 	public static void main(String[] args) {
 		
-		Num num1=new Num("100000000");
-		Num num2=new Num("4");
-		System.out.println(num2);
+		Num num1=new Num("1000434");
+		Num num2=new Num("414343");
+		
 		Num res=Num.add(num1,num2);
 		//Testing Addition
 		System.out.println("Addition : "+num1+" + "+num2+" = "+res);
 		
 		//Testing Subtraction
 		Num res1=Num.subtract(num1,num2);
-		if(num1.compareTo(num2)==0)
-		{
-			System.out.println("Subtraction : "+num1+" - "+num2+" = "+0);	
-		}
-		else if(res1.sign)
-		System.out.println("Subtraction : "+num1+" - "+num2+" = -"+res1);
-		else
 			System.out.println("Subtraction : "+num1+" - "+num2+" = "+res1);
 		
 		//Testing Multiplication
@@ -49,6 +42,7 @@ public class LongNumOperations {
         	
         //Testing squareroot function
         	System.out.println("Squareroot: "+"root of "+num1+" = "+Num.squareRoot(num1));
+        	
         	
         	
 	}
