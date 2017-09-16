@@ -1,6 +1,7 @@
 
 package cs6301.g44;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,47 +9,22 @@ import java.util.LinkedList;
 public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // This can be changed to what you want it to be.
-    long base = 90;  // Change as needed
+    long base = 10;  // Change as needed
     boolean sign;  //true if number is negative
     
     LinkedList<Long> numberList=new LinkedList<Long>();
-    
-    /* Start of Level 1 */
-//    Num(String s) {
-//    	
-//    	if(base==10)
-//    	{
-//    		for(int i=s.length()-1;i>=0;i--)
-//    		{
-//    			if(s.charAt(i)=='-')
-//    			{
-//    				sign=true;
-//    			}
-//    			else
-//    			numberList.add((long) Character.getNumericValue(s.charAt(i)));
-//    		}
-//    	}
-//    	else
-//    	{
-//    		long remainder,quot;//Quotient and remainder
-//        	long x=Long.parseLong(s);
-//        	quot=x;
-//        	//Converting number to required base and adding each number to LinkedList
-//        	while(quot!=0)
-//        	{
-//        		remainder=quot%base;
-//        		numberList.add(remainder);
-//        		quot=quot/base;
-//        	}
-//    	}
-//    
-//    }
     
     
     Num(String s)
     {
     	LinkedList<Long> res=new LinkedList<>();
     	LinkedList<Long> ten=new LinkedList<>();
+    	if(s=="")
+    	{
+    		
+    	}
+    	else
+    	{
     	if(s.charAt(0)=='-')
     	{
     		sign=true;
@@ -56,14 +32,22 @@ public class Num  implements Comparable<Num> {
     	}
     	if(s.length()==1)
     	{
-    		if(s.charAt(0)-'0'>=base)
-        	{
-        		res.add((s.charAt(0)-'0')%base);
-        		res.add((s.charAt(0)-'0')/base);
-        	}
-        	else
-        		res.add((long) (s.charAt(0)-'0'));
-    		numberList=res;
+    		if(s.charAt(0)=='0')
+    		{
+    			numberList.add((long) 0);
+    		}
+    		else
+    		{
+    			if(s.charAt(0)-'0'>=base)
+            	{
+            		res.add((s.charAt(0)-'0')%base);
+            		res.add((s.charAt(0)-'0')/base);
+            	}
+            	else
+            		res.add((long) (s.charAt(0)-'0'));
+        		numberList=res;
+    		}
+    		
     	}
     	
     	else
@@ -91,15 +75,20 @@ public class Num  implements Comparable<Num> {
         	{
         		tt.removeAll(tt);
         		tt.add((long) (s.charAt(i)-'0'));
-        	res=Num.linkedAdd(Num.linkedProd(res, ten, new Num(5)),tt,new Num(5));	
+        	res=Num.linkedAdd(Num.linkedProd(res, ten, new Num(5).base),tt,new Num(5).base);	
         	}
         	numberList=res;
+    	}
+    	
     	}
     }
     
 
     Num(long x) {
     	long quot=x,remainder;
+    	if(x==0)
+    		numberList.add((long) 0);
+    	else
     	while(quot!=0)
     	{
     		remainder=quot%base;
@@ -115,6 +104,67 @@ public class Num  implements Comparable<Num> {
     {
     	return it.hasNext()?it.next():0;
     }
+    
+    
+    static long getTen(long base)  //return number 10 in required base
+    {
+    	long ten=10;
+    	if(base>10)
+    		return 10;
+    	else
+    	{
+    		long remainder;
+    		LinkedList<Long> tenList=new LinkedList<Long>();
+    		while(ten!=0)
+        	{
+        		remainder=ten%base;
+        		tenList.add(remainder);
+        		ten=ten/base;
+        	}
+    		String s="";
+    		for(int i=tenList.size()-1;i>=0;i--)
+    		{
+    			s=s+tenList.get(i);
+    		}
+    		return Long.parseLong(s);
+    	}
+    }
+    
+    //divides the given number by two 
+    static Num divideByTwo(Num a)
+    {
+    	
+    	 if(a.toString().length()==1)
+    	 {
+    	  return new Num((a.toString().charAt(0)-'0')/2);	 
+    	 }
+    	 
+    	 LinkedList<Long> result=new LinkedList<>();
+    	 String newList=a.toString();
+    	 long carry=0;
+    	 
+    	 if(a.toString().charAt(0)=='1')
+    	 {
+    		 Long s=Long.parseLong(a.toString().substring(0, 2));
+    		 result.add(s/2);
+    		 carry=s%2;
+    		 newList=a.toString().substring(2);
+    	 }
+    	 
+    	 Long temp;
+    	 for(int i=0;i<newList.length();i++)
+    	 {
+    	 temp=(long) (newList.charAt(i)-'0')+carry*10;
+    	 result.add(temp/2);
+    	 carry=temp%2;
+    	 }
+    	 
+    	 StringBuilder nu=new StringBuilder();
+    	for(long x:result) 
+    		nu.append(Long.toString(x));
+    return new Num(nu.toString());
+    }
+    
     
     
     static Num add(Num a, Num b) {
@@ -156,7 +206,7 @@ public class Num  implements Comparable<Num> {
     	
     }
     
-    static LinkedList<Long> linkedAdd(LinkedList<Long> a, LinkedList<Long> b, Num x) {
+    static LinkedList<Long> linkedAdd(LinkedList<Long> a, LinkedList<Long> b, long x) {
     	long carry=0,sum;
     	LinkedList<Long> res=new LinkedList<Long>();
     	Iterator<Long> it1=a.iterator();
@@ -164,8 +214,8 @@ public class Num  implements Comparable<Num> {
     	while(it1.hasNext() || it2.hasNext() || carry>0)
     	{
     		sum=next(it1)+next(it2)+carry;
-    		res.add(sum%x.base);
-    		carry=sum/x.base;
+    		res.add(sum%x);
+    		carry=sum/x;
     	}	
     	return res;
     }
@@ -254,8 +304,8 @@ public class Num  implements Comparable<Num> {
     }
     
     
-    
-    static LinkedList<Long> linkedProd(LinkedList<Long> a, LinkedList<Long> b,Num yy) {
+    //multiplies two linkedlists in any base
+    static LinkedList<Long> linkedProd(LinkedList<Long> a, LinkedList<Long> b,long yy) {
     	long carry=0;
     	int count=-1;
     	LinkedList<Long> multRes=new LinkedList<Long>();
@@ -270,8 +320,8 @@ public class Num  implements Comparable<Num> {
 			{
 				long y=b.get(j); 
 				long sum=x*y+carry;  //finding product
-				temp.add(sum%yy.base);
-				carry=sum/yy.base;
+				temp.add(sum%yy);
+				carry=sum/yy;
 			}
 			if(carry!=0)
 				temp.add(carry);
@@ -306,7 +356,7 @@ public class Num  implements Comparable<Num> {
 				temp.add(carry);
 			for(int z=1;z<=count;z++)
 				temp.addFirst((long) 0);  //adding necessary zeroes
-			multRes=Num.linkedAdd(multRes, temp,a);//adding temp result to previous result
+			multRes=Num.linkedAdd(multRes, temp,a.base);//adding temp result to previous result
 		}
     	
     	if(a.base==10)
@@ -360,21 +410,27 @@ public class Num  implements Comparable<Num> {
 
     /* Start of Level 2 */
     static Num divide(Num a, Num b) {
-    	if(a.compareTo(b)==-1)
-    	{
-    		return new Num(0);
-    	}
-    	Num N=a;
-		Num D=b;
-		int count=0;
-		while(N.compareTo(D) >= 0)
-		{
-			count++;
-			N=Num.subtract(N, D);
-		}
-    	
-    	
-	return new Num(count);
+    	Num low=new Num(0);
+        Num high=a;
+        Num res=new Num(0);
+        Num h=new Num(a.toString());
+        while(low.compareTo(h)==-1 )
+        {   
+        	
+        	Num mid=Num.divideByTwo(Num.add(low, high));
+        	Num prod=new Num(Num.product(b, mid).toString());
+        	if(prod.compareTo(a)<=0)
+        	{
+        		res=mid;
+        		low=mid;
+        	}
+        	else
+        		high=mid;
+        	
+        	h=Num.subtract(high, new Num(1));
+        	
+        }
+        	return res;
     }
 
     static Num mod(Num a, Num b) {
@@ -417,7 +473,7 @@ public class Num  implements Comparable<Num> {
        
         return result;
     }
-
+    
     static Num squareRoot(Num a) {
     	
     	if(a.compareTo(new Num(0))==0 || a.compareTo(new Num(1))==0)
@@ -505,17 +561,31 @@ public class Num  implements Comparable<Num> {
     public String toString() {
     	int size=numberList.size();
     	int n=0;
+    	
     	Iterator<Long> it=numberList.iterator();
-    	long res=0;
-    	while(n<size)
+    	LinkedList<Long> bb=new LinkedList<>();
+    	bb.add(base);
+    	
+    	LinkedList<Long> res=new LinkedList<>();
+    	LinkedList<Long> temp=new LinkedList<>();
+    	Num yy;
+    	
+    	while(it.hasNext())
     	{
-    		res=res+ (long) Math.pow(base, n++)*it.next();
+    		bb.removeAll(bb);
+    		temp.removeAll(temp);
+    		
+    		temp.add(it.next());
+    		bb.add((long) Math.pow(base, n++));
+			res=Num.linkedAdd(res,Num.linkedProd(temp, bb, 10),10);
     	}
-    	String r="-";
-    	if(sign)
-    		return r.concat(Long.toString(res));
-    	else
-	        return Long.toString(res);
+    	 Collections.reverse(res);
+    	 StringBuilder s=new StringBuilder();
+    	 if(sign)
+    		 s.append('-');
+    	 for(long x:res)
+    		 s=s.append(x);
+    	 return s.toString();
     }
 
     public long base() { return base; }
