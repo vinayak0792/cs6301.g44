@@ -1,13 +1,26 @@
 package cs6301.g44;
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import cs6301.g44.Num;
 public class LongNumOperations {
 	public static void main(String[] args) {
+	
+		System.out.println("------Testing------");
+		BigInteger f = new BigInteger("20000000000");
+		BigInteger x = new BigInteger("4100003");
+		System.out.println("add: "+ f.add(x));
+		System.out.println("sub: "+f.subtract(x));
+		System.out.println("mutiply :"+f.multiply(x));
+		System.out.println("divide: "+f.divide(x));
+		System.out.println("mod :"+f.mod(x));
+		System.out.println("------Testing------\n");
 		
-		Num num1=new Num("1000434");
-		Num num2=new Num("414343");
+		
+		Num num1=new Num("20000000000");
+		Num num2=new Num("4100003");
+	
 		
 		Num res=Num.add(num1,num2);
 		//Testing Addition
@@ -31,20 +44,23 @@ public class LongNumOperations {
 		
 		//Testing Division
         	System.out.println("Division: "+num1+" / "+num2+" = "+Num.divide(num1, num2));
-        
+        	
         //Testing Modulus
         	System.out.println("Modulus: "+num1+" % "+num2+" = "+Num.mod(num1, num2));
 		
 		//Testing power
-        	Num num3=new Num("-8");
-        	Num res4=Num.power(num3, num2);
-        	System.out.println("Power: "+num3+" ^ "+num2+" = "+res4 );
+        	Num num3=new Num("12");
+        	Num num4=new Num("13");
+        	Num res4=Num.power(num3, num4);
+        	System.out.println("Power: "+num3+" ^ "+num4+" = "+res4 );
         	
         //Testing squareroot function
-        	System.out.println("Squareroot: "+"root of "+num1+" = "+Num.squareRoot(num1));
+        	Num num5=new Num("124749");
+        	System.out.println("Squareroot: "+"root of "+num5+" = "+Num.squareRoot(num5));
         	
         	
         	
 	}
 	
 }
+
