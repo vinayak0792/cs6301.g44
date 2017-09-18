@@ -1,3 +1,7 @@
+/**  Short Project 3: Driver program that checks for Bridges and Cut Vertices
+ *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * 
+ */
 package cs6301.g44;
 
 import java.io.File;

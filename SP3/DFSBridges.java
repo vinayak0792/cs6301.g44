@@ -1,3 +1,7 @@
+/**  Short Project 3: Includes program that returns the bridges in a given graph
+ *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * 
+ */
 package cs6301.g44;
 
 import java.util.List;
