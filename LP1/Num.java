@@ -1,7 +1,6 @@
 
 package cs6301.g44;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,7 +13,6 @@ public class Num  implements Comparable<Num> {
     
     LinkedList<Long> numberList=new LinkedList<Long>();
     
-    
     Num(String s)
     {
     	LinkedList<Long> res=new LinkedList<>();
@@ -24,8 +22,8 @@ public class Num  implements Comparable<Num> {
     		
     	}
     	else
-    	{
-    	if(s.charAt(0)=='-')
+    	{  
+    	if(s.charAt(0)=='-')//if its a negative number make sign true and remove first character
     	{
     		sign=true;
     		s=s.substring(1);
@@ -38,7 +36,7 @@ public class Num  implements Comparable<Num> {
     		}
     		else
     		{
-    			if(s.charAt(0)-'0'>=base)
+    			if(s.charAt(0)-'0'>=base)    //if first digit is greater than base add remainder and quotient to rsult list
             	{
             		res.add((s.charAt(0)-'0')%base);
             		res.add((s.charAt(0)-'0')/base);
@@ -78,6 +76,7 @@ public class Num  implements Comparable<Num> {
         	res=Num.linkedAdd(Num.linkedProd(res, ten, new Num(5).base),tt,new Num(5).base);	
         	}
         	numberList=res;
+        	
     	}
     	
     	}
@@ -99,14 +98,14 @@ public class Num  implements Comparable<Num> {
     	
     }
 
-    
+    //returns next element if present else zero
     static long next(Iterator<Long> it)
     {
     	return it.hasNext()?it.next():0;
     }
     
     
-    static long getTen(long base)  //return number 10 in required base
+    static long getTen(long base)  //returns number 10 in required base
     {
     	long ten=10;
     	if(base>10)
@@ -166,8 +165,22 @@ public class Num  implements Comparable<Num> {
     }
     
     
-    
     static Num add(Num a, Num b) {
+    	
+    	if(a.sign && ! b.sign)
+    	{
+    		Num temp=new Num(a.toString());
+    		temp.sign=false;
+    		return Num.subtract(b, temp);
+    	}
+    			
+    	
+    	if(!a.sign && b.sign)
+    	{
+    		Num temp=new Num(b.toString());
+    		temp.sign=false;
+    		return Num.subtract(a, temp);
+    	}	
     	long carry=0,sum;
     	LinkedList<Long> additionRes=new LinkedList<Long>();
     	Iterator<Long> it1=a.numberList.iterator();
@@ -179,35 +192,23 @@ public class Num  implements Comparable<Num> {
     		carry=sum/a.base;
     	}
     	
-    	if(a.base==10)
-    	{
     		Collections.reverse(additionRes);
     		StringBuilder result=new StringBuilder();
     		for(long x:additionRes)
     		{
     			result=result.append(Long.toString(x).toString());
     		}
-    		return new Num(result.toString());
-    	}
-    	else
-    	{
-    		//converting result to base 10
-        	int size=additionRes.size();
-        	int n=0;
-        	Iterator<Long> it=additionRes.iterator();
-        	long res1=0;
-        	while(n<size)
-        	{
-        		res1=res1+ (long) Math.pow(a.base, n++)*it.next();
-        	}
-        	
-        	return new Num(res1);
-    	}
+    		Num re=new Num(result.toString());
+    		
+    		if(a.sign&&b.sign)  //if both are negative numbers
+    			re.sign=true;
+    		return re;
     	
     }
     
-    static LinkedList<Long> linkedAdd(LinkedList<Long> a, LinkedList<Long> b, long x) {
-    	long carry=0,sum;
+    //adds two linked lists
+    static LinkedList<Long> linkedAdd(LinkedList<Long> a, LinkedList<Long> b, long base) {
+    	long carry=0,sum,x=base;
     	LinkedList<Long> res=new LinkedList<Long>();
     	Iterator<Long> it1=a.iterator();
     	Iterator<Long> it2=b.iterator();
@@ -221,14 +222,46 @@ public class Num  implements Comparable<Num> {
     }
     
     
-    
     static Num subtract(Num a, Num b) {
     	LinkedList<Long> subRes=new LinkedList<Long>();
-    	Num num1=a,num2=b,z;
+    	Num num1=a,num2=b;
     	if(num1.compareTo(num2)==0)
     	{
     		return new Num(0);
     	}
+    	
+    	if(a.sign&& !b.sign) //if both are negative add them and attach negative sign
+    	{
+    		Num n1=new Num(a.toString());
+    		Num n2=new Num(b.toString());
+    		n1.sign=false;
+    		n2.sign=false;
+    		Num temp=Num.add(n1, n2);
+    		temp.sign=true;
+    		return temp;
+    	}
+    	
+    	if(!num1.sign&&num2.sign)
+    	{
+    		Num n1=new Num(a.toString());
+    		Num n2=new Num(b.toString());
+    		n1.sign=false;
+    		n2.sign=false;
+    		Num temp=Num.add(n1, n2);
+    		temp.sign=false;
+    		return temp;
+    	}
+    	
+    	if(a.sign&&b.sign)
+    	{
+    		Num n1=new Num(a.toString());
+    		Num n2=new Num(b.toString());
+    		n1.sign=false;
+    		n2.sign=false;
+    		Num temp=Num.subtract(n2, n1);
+    		return temp;
+    	}
+    	
     	if(num1.compareTo(num2)==-1)
     	{
     		num1=b;
@@ -272,8 +305,6 @@ public class Num  implements Comparable<Num> {
     		subRes.removeLast();
     	}
     		
-    		if(a.base==10)
-        	{
         		Collections.reverse(subRes);
         		StringBuilder result=new StringBuilder();
         		for(long x:subRes)
@@ -284,31 +315,14 @@ public class Num  implements Comparable<Num> {
         		if(a.compareTo(b)==-1)
         			ans.sign=true;
         		return ans;
-        	}
-        	else
-        	{
-        		//converting result to base 10
-        		int size=subRes.size();
-        		int n=0;
-        		Iterator<Long> it=subRes.iterator();
-        		long res1=0;
-        		while(n<size)
-        		{
-        			res1=res1+ (long) Math.pow(a.base, n++)*it.next();
-        		}
-        		Num ans=new Num(res1);
-        		if(a.compareTo(b)==-1)
-        			ans.sign=true;
-        		return ans;
-        	}
+       
     }
-    
     
     //multiplies two linkedlists in any base
     static LinkedList<Long> linkedProd(LinkedList<Long> a, LinkedList<Long> b,long yy) {
     	long carry=0;
     	int count=-1;
-    	LinkedList<Long> multRes=new LinkedList<Long>();
+    	LinkedList<Long> multRes=new LinkedList<>();
 		LinkedList<Long> temp=new LinkedList<>();
     	for(int i=0;i<a.size();i++)   //loop through digits of number a
 		{
@@ -335,6 +349,92 @@ public class Num  implements Comparable<Num> {
     
     // Implement Karatsuba algorithm for excellence credit
     static Num product(Num a, Num b) {
+    	Num temp=new Num("");
+    	
+    	if(a.compareTo(b)==-1)
+    	{
+    		temp=a;
+    		a=b;
+    		b=temp;
+    	}
+		Num ans=karatsube(a, b);
+		if(a.sign&&!b.sign)
+			ans.sign=true;
+		if(!a.sign&&b.sign)
+			ans.sign=true;
+		return ans;
+    	
+    }
+    
+    //shifts the given input number by count bits
+    static Num shiftBit(Num x,int count)
+    {
+    	for(int i=0;i<count;i++)
+    	{
+    		x.numberList.addFirst((long) 0);
+    	}
+    	return x;
+    }
+    
+    //implemeted karatsube algorithm
+    static Num karatsube(Num a, Num b){
+    	
+    	if(a.numberList.size()<=5 || b.numberList.size()<=5)
+    	{
+    		//Long re=Long.parseLong(a.toString())*Long.parseLong(b.toString());
+    		//Long res=a.numberList.get(0)*b.numberList.get(0);
+    		return Num.karatsubeproduct(a, b);
+    		//return new Num(re);
+    	}
+    	
+    	Long[] aArray=a.numberList.toArray(new Long[a.numberList.size()]);
+    	Long[] bArray=b.numberList.toArray(new Long[b.numberList.size()]);
+    	
+    	int k=bArray.length/2;
+    	
+    	StringBuilder al=new StringBuilder();
+    	StringBuilder ah=new StringBuilder();
+    	StringBuilder bl=new StringBuilder();
+    	StringBuilder bh=new StringBuilder();
+    	
+    	for(int i=k-1;i>=0;i--)
+    		al.append(aArray[i]);
+    	//System.out.println(al.length());
+    	Num nal=new Num(al.toString());;
+    	
+    	for(int i=aArray.length-1;i>=k;i--)
+    		ah.append(aArray[i]);
+    	Num nah=new Num(ah.toString());
+    
+    	for(int i=k-1;i>=0;i--)
+    		bl.append(bArray[i]);
+    	Num nbl=new Num(bl.toString());
+    	
+    	for(int i=bArray.length-1;i>=k;i--)
+    		bh.append(bArray[i]);
+    	Num nbh=new Num(bh.toString());
+    	
+    	Num ahbh=Num.shiftBit(Num.karatsube(nah,nbh),2*k);
+    	
+    	Num step1=Num.add(nal, nah);
+    	Num step2=Num.add(nbl,nbh);
+    	Num step3=Num.karatsube(step1, step2);
+    	Num step4=Num.karatsube(nah, nbh);
+    	Num step5=Num.subtract(step3, step4);
+    	Num step6=Num.karatsube(nal, nbl);
+    	Num step7=Num.subtract(step5, step6);
+    	Num mid=Num.shiftBit(step7, k);
+    	
+        Num albl=Num.karatsube(nal, nbl);
+        
+        Num res=Num.add(ahbh, mid);
+        res=Num.add(res, albl);
+        
+        return res;
+    }
+
+    //nsquare multiplication for base case of karatsuba algorithm
+    static Num karatsubeproduct(Num a, Num b) {
     	long carry=0;
     	int count=-1;
     	LinkedList<Long> multRes=new LinkedList<Long>();
@@ -359,37 +459,19 @@ public class Num  implements Comparable<Num> {
 			multRes=Num.linkedAdd(multRes, temp,a.base);//adding temp result to previous result
 		}
     	
-    	if(a.base==10)
-    	{
+    	
     		Collections.reverse(multRes);
-    		StringBuilder result=new StringBuilder();
-    		for(long x:multRes)
-    		{
-    			result=result.append(Long.toString(x).toString());
-    		}
-    		return new Num(result.toString());
-    	}
-    	else
-    	{
-    		//converting result to base 10
-        	int size=multRes.size();
-        	int n=0;
-        	Iterator<Long> it=multRes.iterator();
-        	long res1=0;
-        	while(n<size)
-        	{
-        		res1=res1+ (long) Math.pow(a.base, n++)*it.next();
-        	}
-        	
-        	return new Num(res1);
-    	}
+		StringBuilder result=new StringBuilder();
+		for(long x:multRes)
+		{
+			result=result.append(Long.toString(x).toString());
+		}
+		Num ans=new Num(result.toString());
+		return ans;
     	
     }
-
     
-    
-
-    // Use divide and conquer
+    // Use divide and conquer to find power
     static Num power(Num a, long y) {
     	Num result=new Num(1);     // Initialize result
     	 
@@ -397,7 +479,11 @@ public class Num  implements Comparable<Num> {
         {
             // multiply x with result if y is odd
             if (y %2 !=0)
-                result = Num.product(result, a);
+            {
+            	//System.out.println("re");
+            	result = Num.product(result, a);
+            }
+                
      
             // y is even now
             y = y/2; 
@@ -410,16 +496,21 @@ public class Num  implements Comparable<Num> {
 
     /* Start of Level 2 */
     static Num divide(Num a, Num b) {
+    	Num n1=new Num(a.toString());
+		Num n2=new Num(b.toString());
+		n1.sign=false;
+		n2.sign=false;
+		
     	Num low=new Num(0);
-        Num high=a;
+        Num high=n1;
         Num res=new Num(0);
-        Num h=new Num(a.toString());
-        while(low.compareTo(h)==-1 )
+        Num h=new Num(n1.toString());
+        while(low.compareTo(h)==-1 )//using binary search
         {   
         	
         	Num mid=Num.divideByTwo(Num.add(low, high));
-        	Num prod=new Num(Num.product(b, mid).toString());
-        	if(prod.compareTo(a)<=0)
+        	Num prod=new Num(Num.product(n2, mid).toString());
+        	if(prod.compareTo(n1)<=0)
         	{
         		res=mid;
         		low=mid;
@@ -430,26 +521,21 @@ public class Num  implements Comparable<Num> {
         	h=Num.subtract(high, new Num(1));
         	
         }
+        if(a.sign&&!b.sign)
+        	res.sign=true;
+        if(!a.sign&&b.sign)
+        	res.sign=true;
         	return res;
     }
-
-    static Num mod(Num a, Num b) {
-
-    	if(a.compareTo(b)==-1)
-    	{
-    		return a;
-    	}
-    	Num N=a;
-		Num D=b;
-		int count=0;
-		while(N.compareTo(D) >= 0)
-		{
-			count++;
-			N=Num.subtract(N, D);
-		}
-    	
-    	
-	return N;
+    
+    static Num mod(Num a,Num b)
+    {
+    	Num n1=new Num(a.toString());
+		Num n2=new Num(b.toString());
+		n1.sign=false;
+		n2.sign=false;
+    	Num res=Num.subtract(n1,Num.product(Num.divide(n1, n2),n2));
+    	return res;
     }
 
     // Use divide and conquer
@@ -470,7 +556,7 @@ public class Num  implements Comparable<Num> {
         
         if ( Num.mod(n, new Num(2)).compareTo(new Num(0)) != 0)//if power is odd and number is negative result must be negative
     		result.sign=z.sign;
-       
+       //System.out.println(result.numberList);
         return result;
     }
     
@@ -482,7 +568,7 @@ public class Num  implements Comparable<Num> {
     	Num end=a,ans=new Num(0);
     	while(start.compareTo(end)!=1)
     	{
-    		Num mid=Num.add(start, end);        //finding (start+ens)/2
+    		Num mid=Num.add(start, end);        //finding (start+end)/2
     		mid=Num.divide(mid, new Num(2));
     		Num prod=Num.product(mid, mid);
     		
@@ -507,11 +593,13 @@ public class Num  implements Comparable<Num> {
     // Utility functions
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
-    	if(this.sign)
-    	{
-    		if(other.sign==false)
-    			return -1;
-    	}
+    	
+    	if(this.sign&&!other.sign) //this is negative and other is positive
+    		return -1;
+    	
+    	if(!this.sign&&other.sign)
+    		return 1;
+    	
     	if(this.numberList.size()>other.numberList.size())
     	{
     		return 1;
@@ -550,6 +638,8 @@ public class Num  implements Comparable<Num> {
     // then the output is "100: 65 9 1"
     void printList() {
     	System.out.print(base+":");
+    	if(sign)
+    		System.out.print(" - ");
     	for(long x:numberList)
     	{
     		System.out.print(" "+x);
@@ -559,27 +649,29 @@ public class Num  implements Comparable<Num> {
     
     // Return number to a string in base 10
     public String toString() {
-    	int size=numberList.size();
-    	int n=0;
     	
-    	Iterator<Long> it=numberList.iterator();
-    	LinkedList<Long> bb=new LinkedList<>();
-    	bb.add(base);
+    	//Collections.reverse(numberList);
+    	LinkedList<Long> nn=new LinkedList<>(numberList);
+    	Collections.reverse(nn);
+    	
+    	Iterator<Long> it=nn.iterator();
     	
     	LinkedList<Long> res=new LinkedList<>();
+    	res.add((long) 0);
     	LinkedList<Long> temp=new LinkedList<>();
-    	Num yy;
+    	
+    	LinkedList<Long> ten=new LinkedList<>();
+    	ten.add(base);
     	
     	while(it.hasNext())
     	{
-    		bb.removeAll(bb);
     		temp.removeAll(temp);
     		
     		temp.add(it.next());
-    		bb.add((long) Math.pow(base, n++));
-			res=Num.linkedAdd(res,Num.linkedProd(temp, bb, 10),10);
+    		res=Num.linkedAdd(Num.linkedProd(res,ten, 10),temp,10);
+			
     	}
-    	 Collections.reverse(res);
+    	Collections.reverse(res);
     	 StringBuilder s=new StringBuilder();
     	 if(sign)
     		 s.append('-');
