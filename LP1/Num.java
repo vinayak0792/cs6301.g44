@@ -1,4 +1,8 @@
 
+/**  LP 1: Program which implements the Num class
+ *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * 
+ */
 package cs6301.g44;
 
 import java.util.Collections;
