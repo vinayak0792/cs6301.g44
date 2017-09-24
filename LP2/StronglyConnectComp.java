@@ -1,10 +1,12 @@
-package cs6301.g44;
-
-import java.util.*;
-
+/** StronglyConnectComp class which checks if a given graph is SCC or not
 /**
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
+package cs6301.g44.Lp2;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class StronglyConnectComp {
 

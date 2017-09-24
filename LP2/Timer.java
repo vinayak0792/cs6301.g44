@@ -8,7 +8,9 @@
  *          System.out.println(timer);  // output statistics
  *  Corrected memory calculations to 1048576 instead of 1000000
  */
-
+/**
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 package cs6301.g44;
 public class Timer {
     long startTime, endTime, elapsedTime, memAvailable, memUsed;

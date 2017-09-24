@@ -5,7 +5,9 @@
  *  Ver 1.2: 2017/09/08.  Added getVertex() method for GraphAlgorithm.java
  *
  */
-
+/**
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 package cs6301.g44;
 import java.util.Iterator;
 import java.util.LinkedList;

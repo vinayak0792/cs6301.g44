@@ -1,5 +1,6 @@
-
-// change following line to your group number
+/**
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 package cs6301.g44;
 
 import java.io.File;
@@ -38,9 +39,9 @@ public class LP2 {
 		Vertex startVertex = g.getVertex(start);
 
 		Timer timer = new Timer();
-		Euler euler = new Euler(g, startVertex);
+		Euler euler = new Euler(g, startVertex); //Strongly connected & number ( incoming edge == outgoing edge) 
 		euler.setVerbose(VERBOSE);
-
+		
 		// Checking if the grpah is eulerian
 		boolean eulerian = euler.isEulerian(g);
 		if (!eulerian) {
@@ -51,7 +52,7 @@ public class LP2 {
 		List<Graph.Edge> tour = euler.findEulerTour(g);
 		timer.end();
 		if (VERBOSE > 0) {
-			System.out.println("Output:\n_________________________");
+			System.out.println("Its output (not unique):\n_________________________");
 			for (Graph.Edge e : tour) {
 				System.out.print(e);
 			}
