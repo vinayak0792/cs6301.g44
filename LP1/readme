@@ -1,0 +1,43 @@
+Team members: Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+
+Num.java : Program which implements the Num class. It implements all the operations of Level 1 aand Level 2
+
+LongNumOperations.java : Driver Program to test Level 1 and Level 2
+Sample run:
+----------------LEVEL 1------------------
+
+Addition : 1231886633362337 + 13213787333 = 1231899847149670
+Subtraction : 1231886633362337 - 13213787333 = 1231873419575004
+Multiplication : 1231886633362337 * 13213787333 = 16277887991615263849877221
+123 power 2 is: 15129
+Testing printList() for 1231886633362337
+10: 7 3 3 2 6 3 3 3 6 6 8 8 1 3 2 1
+
+----------------LEVEL 2------------------
+
+Division: 1231886633362337 / 13213787333 = 93227
+Modulus: 1231886633362337 % 13213787333 = 4881668746
+Power: 999 ^ 8 = 991828752970743727992001
+Squareroot: root of 8643534386655 = 2939988
+
+
+
+PostfixEvaluate.java : Driver Program to test Level 3
+Sample run with console input
+
+Input:
+a = 999 ;
+b = 8 ;
+c = a b ^ ;
+d = a b + ;
+;
+
+Press 'ENTER'
+
+Output:
+999
+8
+991828752970743727992001
+1007
+
+10: 7 0 0 1
