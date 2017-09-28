@@ -1,74 +1,56 @@
-/** Euler Class which computes the sub tours, euler tour and also checks for SCC and Eulerian graphs
 /**
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
-
-// change following line to your group number
-package cs6301.g44;
+package cs6301.g44.Lp2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import cs6301.g44.Graph;
-import cs6301.g44.Graph.Edge;
-import cs6301.g44.Graph.Vertex;
-import cs6301.g44.StronglyConnectComp;
+import cs6301.g44.Lp2.Graph;
+import cs6301.g44.Lp2.Graph.Edge;
+import cs6301.g44.Lp2.Graph.Vertex;
 
-public class Euler {
+public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	int VERBOSE;
 	List<Graph.Edge> tour;
 	Graph.Vertex start;
 
-	// Constructor
-	Euler(Graph g, Graph.Vertex start) {
+	// Making use of the Graph Algorithm to implement Euler Vertex which has all
+	// the necessary variables
+	/**
+	 * EulerVertex class
+	 * 
+	 * @param subTour    : Boolean - True if vertex has a sub tour. 
+	 * 		  vertexTour : ArrayList - Stores the sub tour if present for a vertex 
+	 *        itEdge     : Iterator - To itearate over the outgoing edge list of a vertex
+	 */
+	class EulerVertex {
+		Iterator<Edge> itEdge;
+		boolean subTour;
+		List<Edge> vertexTour;
+
+		/**
+		 * 
+		 */
+		public EulerVertex(Graph.Vertex u) {
+			itEdge = u.adj.iterator();
+			subTour = false;
+
+		}
+
+	}
+
+	public Euler(Graph g, Graph.Vertex start) {
+		super(g);
+		node = new EulerVertex[g.size()];
+		for (Graph.Vertex u : g) {
+			node[u.name] = new EulerVertex(u);
+		}
 		VERBOSE = 1;
-		tour = new LinkedList<>();
+		tour = new LinkedList<Graph.Edge>();
 		this.start = start;
-	}
-	
-	// Find tours starting at vertices with unexplored edges
-	public static void findTours(Vertex u, List<Edge> tour, Iterator<Edge> it) {
-		// Iterator<Edge> it = u.adj.iterator();
-		Edge e;
-		u.subTour = true;
-		while (it.hasNext()) {
-			e = it.next();
-			if (!e.visited) {
-				tour.add(e);
-				e.visited = true;
-				Vertex v = e.otherEnd(e.from);
-				v.outgoing++; 
-				it = v.adj.listIterator(v.outgoing-1);
-			}
-		}
-	}
-
-	// To do: function to find an Euler tour
-	public List<Graph.Edge> findEulerTour(Graph g) {
-		// Finding all the subTours for the start vertex
-		start.vertexTour = new ArrayList<Edge>();
-		Iterator<Edge> it = start.adj.iterator();
-		findTours(start, start.vertexTour, it);
-
-		// Checking if there exists another vertex V with unexplored edges
-		// If any then we find subTours for that edge
-		Iterator<Vertex> itVertex = g.iterator();
-		while (itVertex.hasNext()) {
-			Vertex v = itVertex.next();
-			if (v.outgoing != v.adj.size()) {
-				it = v.adj.listIterator(v.outgoing);
-				//it = v.adj.iterator();
-				v.vertexTour = new ArrayList<>();
-				findTours(v, v.vertexTour, it);
-			}
-		}
-		if (VERBOSE > 9) {
-			printTours(g);
-		}
-		stitchTours(g, tour);
-		return tour;
 	}
 
 	boolean isEulerian(Graph g) {
@@ -92,7 +74,46 @@ public class Euler {
 			return false;
 
 		}
+		System.out.println("Done with eulerian");
 		return true;
+	}
+
+	public List<Graph.Edge> findEulerTour(Graph g) {
+		// Finding all the subTours for the start vertex
+		EulerVertex eV = getVertex(start);
+		eV.vertexTour = new ArrayList<Edge>();
+		findTours(start, eV.vertexTour);
+
+		// Checking if there exists another vertex V with unexplored edges
+		// If any then we find subTours for that edge
+		Iterator<Vertex> itVertex = g.iterator();
+		while (itVertex.hasNext()) {
+			Vertex v = itVertex.next();
+			EulerVertex eU = getVertex(v);
+			if (eU.itEdge.hasNext() && eU != eV) {
+				eU.vertexTour = new ArrayList<Edge>();
+				findTours(v, eU.vertexTour);
+			}
+		}
+		if (VERBOSE > 9) {
+			printTours(g);
+		}
+		stitchTours(g, tour);
+		return tour;
+	}
+
+	public void findTours(Vertex u, List<Edge> tour) {
+		Edge e;
+		EulerVertex eV = getVertex(u);
+		eV.subTour = true;
+		Iterator<Edge> it = eV.itEdge;
+		while (it.hasNext()) {
+			e = it.next();
+			tour.add(e);
+			Vertex v = e.otherEnd(e.from);
+			it = getVertex(v).itEdge;
+
+		}
 	}
 
 	void printTours(Graph g) {
@@ -100,7 +121,8 @@ public class Euler {
 		Iterator<Vertex> it = g.iterator();
 		while (it.hasNext()) {
 			Vertex v = it.next();
-			if (v.subTour && v != start) {
+			EulerVertex eV = getVertex(v);
+			if (eV.subTour && v != start) {
 				printTourUtil(v);
 			}
 		}
@@ -109,8 +131,9 @@ public class Euler {
 	// Helper function which print the sub tours of the respective vertices in
 	// the specified format
 	void printTourUtil(Vertex u) {
+		EulerVertex eU = getVertex(u);
 		System.out.print((u.name + 1) + ": ");
-		Iterator<Edge> itEdge = u.vertexTour.iterator();
+		Iterator<Edge> itEdge = eU.vertexTour.iterator();
 		while (itEdge.hasNext()) {
 			System.out.print(itEdge.next());
 		}
@@ -126,14 +149,17 @@ public class Euler {
 	// Helper method that recursively iterates over all the sub tours if any and
 	// stitches them into one tour.
 	void explore(Graph.Vertex u, List<Edge> eulerTour) {
-		Graph.Vertex temp = u;
+		EulerVertex temp = getVertex(u);
 		temp.subTour = false;
-		for (Edge e : temp.vertexTour) {
+		Iterator<Edge> itEdge = temp.vertexTour.iterator();
+		while (itEdge.hasNext()) {
+			Edge e = itEdge.next();
 			eulerTour.add(e);
-			temp = e.otherEnd(temp);
+			Vertex v1 = e.otherEnd(e.from);
+			temp = getVertex(v1);
 			if (temp.subTour) {
 				temp.subTour = false;
-				explore(temp, eulerTour);
+				explore(v1, eulerTour);
 
 			}
 		}
@@ -142,4 +168,5 @@ public class Euler {
 	void setVerbose(int v) {
 		VERBOSE = v;
 	}
+
 }

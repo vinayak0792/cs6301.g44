@@ -8,7 +8,7 @@
 /**
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
-package cs6301.g44;
+package cs6301.g44.Lp2;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,9 +26,8 @@ public class Graph implements Iterable<Graph.Vertex> {
 
     public static class Vertex implements Iterable<Edge> {
 	int name; // name of the vertex
-	List<Edge> adj, revAdj, vertexTour; // adjacency list; use LinkedList or ArrayList
-	int outgoing;
-	boolean subTour;
+	List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
+
 
 	/**
 	 * Constructor for the vertex
@@ -74,7 +73,6 @@ public class Graph implements Iterable<Graph.Vertex> {
 	Vertex from; // head vertex
 	Vertex to; // tail vertex
 	int weight;// weight of edge
-	boolean visited;
 
 	/**
 	 * Constructor for Edge
