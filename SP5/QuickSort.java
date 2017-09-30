@@ -1,6 +1,8 @@
 package cs6301.g44;
 
 
+import java.util.Map;
+
 /**
  *  *@author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
@@ -14,7 +16,8 @@ public class QuickSort {
 
     public static <T extends Comparable<? super T>>
     int getPartitionHoareVersion(T[] elements, int low, int high){
-        T pivot = elements[low];
+        int index = low + (int) (Math.random()*(high-low+1));
+        T pivot = elements[index];
         int left = low-1, right = high+1;
 
         while (true){
@@ -48,9 +51,11 @@ public class QuickSort {
     }
 
     public static<T extends Comparable<? super T>> int getPartitionVersion1(T[] elements, int low, int high){
-        int partitionIndex = low;
+        int partitionIndex = low + (int)(Math.random()*(high-low+1));
+        swap(elements, partitionIndex, high);
         T pivot = elements[high];
-        for (int cur= low; cur<= high-1; cur++){
+        partitionIndex = low;
+        for (int cur= low; cur<=high-1; cur++){
             if (elements[cur].compareTo(pivot) < 0){
                 swap(elements, cur, partitionIndex);
                 partitionIndex ++;
