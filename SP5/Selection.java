@@ -1,8 +1,4 @@
-/**
- * 
- */
 package cs6301.g44;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,14 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-
 /**
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
- * Selection class consists 3 algorithms to find k largest elements from a given unsorted list of elements.
+ *         Selection class consists 3 algorithms to find k largest elements from
+ *         a given unsorted list of elements.
  */
 public class Selection {
 
-	//Algorithm 1: Using Priority Queue(max heap) to select k largest elements 
+	// Algorithm 1: Using Priority Queue(max heap) to select k largest elements
 	<T extends Comparable<? super T>> List<T> maxHeap(T[] A, int k) {
 
 		PriorityQueue<T> pq = new PriorityQueue<>(k, Collections.reverseOrder());
@@ -34,17 +30,17 @@ public class Selection {
 		return kLargeElements;
 
 	}
-
-	<T extends Comparable<? super T>> T[] minHeap(List<T> A, int k) {
-		PriorityQueue<T> pq = new PriorityQueue<>(k);
+	
+	// Algorithm 2: Using Priority Queue(min heap) to select k largest elements
+	<T extends Comparable<? super T>> PriorityQueue<T> minHeap(List<T> A, int k) {
+		PriorityQueue<T> pq = new PriorityQueue<T>(k);
 		Iterator<T> it = A.iterator();
-		T kLargeElements[] = (T[])new Comparable[k];
 		for (int i = 0; i < k; i++) {
 			if (it.hasNext()) {
 				pq.add(it.next());
 			} else {
-				kLargeElements = pq.toArray(kLargeElements);
-				return kLargeElements;
+
+				return pq;
 			}
 
 		}
@@ -55,11 +51,10 @@ public class Selection {
 				pq.add(x);
 			}
 		}
-		kLargeElements = pq.toArray(kLargeElements);
-		return kLargeElements;
+		return pq;
 	}
 
-	// Select function that calls helper function
+	// Algorithm 3: Using partition to find k largest elements
 	<T extends Comparable<? super T>> T[] select(T[] A, int k) {
 		int n = A.length - 1;
 		if (k <= 0)
