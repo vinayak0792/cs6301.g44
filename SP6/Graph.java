@@ -3,7 +3,12 @@
  *  @author rbk
  *  Ver 1.1: 2017/08/28.  Updated some methods to public.  Added getName() to Vertex
  *  Ver 1.2: 2017/09/08.  Added getVertex() method for GraphAlgorithm.java
+ 
+ Updated this file by  
+ *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  *
+ *  Ver 1.3: 2017/10/05.  Added compareTo for Edge and seen, parent variable for Vertex
+ 
  */
 
 package cs6301.g44;
