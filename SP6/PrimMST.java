@@ -1,3 +1,7 @@
+/**  Short Project 6: Program to compute MST utilizing Priority Queue with edges in Prim's Algorithm 
+ *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * 
+ */
 package cs6301.g44;
 
 import java.util.Scanner;
