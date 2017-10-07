@@ -39,6 +39,7 @@ public class PrimMST {
         // SP6.Q4: Prim's algorithm using PriorityQueue<Edge>:
         for(Edge e: s)
         	pq.add(e);
+	System.out.println("MST");    
         while(!pq.isEmpty()) {
         	Edge e = pq.remove();
         	if(e.to.seen && e.from.seen)
@@ -47,7 +48,7 @@ public class PrimMST {
         		e.to.seen = true;
             	e.to.parent = e.from;
             	wmst += e.weight;
-            	//System.out.print(e.weight+" ");
+            	System.out.print(e.weight+" ");
             	for(Edge e2:e.to) {
             		if(!e2.otherEnd(e.to).seen)
             			pq.add(e2);
@@ -57,7 +58,7 @@ public class PrimMST {
         		e.from.seen = true;
             	e.from.parent = e.to;
             	wmst += e.weight;
-            	//System.out.print(e.weight+" ");
+            	System.out.print(e.weight+" ");
             	for(Edge e2:e.from) {
             		if(!e2.otherEnd(e.from).seen)
             			pq.add(e2);
