@@ -2,102 +2,105 @@
  *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  * 
  */
-package cs6301.g44;
+package cs6301.g44.SP6;
 
 import java.util.Scanner;
 
-import cs6301.g44.Graph.Edge;
-import cs6301.g44.Graph.Vertex;
+import cs6301.g44.SP6.GraphAlgorithm;
+import cs6301.g44.SP6.Graph.Edge;
+import cs6301.g44.SP6.Graph.Vertex;
 
-import java.lang.Comparable;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
-public class PrimMST {
-    static final int Infinity = Integer.MAX_VALUE;
-    Graph g;
-    
-    public PrimMST(Graph g) {
-    	this.g = g;
-    }
-    
-//    public int compareTo(Edge other) {
-//    	return this.;
-//    }
+public class PrimMST extends GraphAlgorithm<PrimMST.PrimVertex> {
+	static final int Infinity = Integer.MAX_VALUE;
 
-    public int prim1(Graph.Vertex s) {
-        int wmst = 0;
-        for(Graph.Vertex u:g.v) {
-        	u.seen = false;
-        	u.parent = null;
-        }
-        s.seen = true;
-        	
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        // SP6.Q4: Prim's algorithm using PriorityQueue<Edge>:
-        for(Edge e: s)
-        	pq.add(e);
-	System.out.println("MST");    
-        while(!pq.isEmpty()) {
-        	Edge e = pq.remove();
-        	if(e.to.seen && e.from.seen)
-        		continue;
-        	else if(e.from.seen) {
-        		e.to.seen = true;
-            	e.to.parent = e.from;
-            	wmst += e.weight;
-            	System.out.print(e.weight+" ");
-            	for(Edge e2:e.to) {
-            		if(!e2.otherEnd(e.to).seen)
-            			pq.add(e2);
-            	}
-        	}
-        	else if(e.to.seen) {
-        		e.from.seen = true;
-            	e.from.parent = e.to;
-            	wmst += e.weight;
-            	System.out.print(e.weight+" ");
-            	for(Edge e2:e.from) {
-            		if(!e2.otherEnd(e.from).seen)
-            			pq.add(e2);
-            	}
-        	}
-        	
-        	
-        }
-        
+	class PrimVertex {
+		boolean seen;
+		Vertex parent;
 
-        return wmst;
-    }
+		PrimVertex(Vertex u) {
+			seen = false;
+			parent = null;
+		}
 
-//    public int prim2(Graph.Vertex s) {
-//        int wmst = 0;
-//
-//        // SP6.Q6: Prim's algorithm using IndexedHeap<PrimVertex>:
-//
-//        return wmst;
-//    }
+	}
 
-    public static void main(String[] args) throws FileNotFoundException {
-		
-    	Scanner in;
-	
-	    if (args.length > 0) {
-	       File inputFile = new File(args[0]);
-	       in = new Scanner(inputFile);
-	    } else {
-	       in = new Scanner(System.in);
-	    }
-	
+	public PrimMST(Graph g) {
+		super(g);
+		node = new PrimVertex[g.size()];
+		for (Vertex u : g) {
+			node[u.name] = new PrimVertex(u);
+		}
+	}
+
+	// public int compareTo(Edge other) {
+	// return this.;
+	// }
+
+	public int prim1(Vertex s) {
+		PrimVertex sV = getVertex(s);
+		int wmst = 0;
+		sV.seen = true;
+
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		// SP6.Q4: Prim's algorithm using PriorityQueue<Edge>:
+		for (Edge e : s)
+			pq.add(e);
+		System.out.println("MST");
+		while (!pq.isEmpty()) {
+			Edge e = pq.remove();
+			PrimVertex eTo = getVertex(e.to);
+			PrimVertex eFrom = getVertex(e.from);
+			if (eTo.seen && eFrom.seen)
+				continue;
+			else if (eFrom.seen) {
+				eTo.seen = true;
+				eTo.parent = e.from;
+				wmst += e.weight;
+				System.out.print(e.weight + " ");
+				for (Edge e2 : e.to) {
+					PrimVertex ePv = getVertex(e2.otherEnd(e.to));
+					if (!ePv.seen)
+						pq.add(e2);
+				}
+			} else if (eTo.seen) {
+				eFrom.seen = true;
+				eFrom.parent = e.to;
+				wmst += e.weight;
+				System.out.print(e.weight + " ");
+				for (Edge e2 : e.to) {
+					PrimVertex ePv = getVertex(e2.otherEnd(e.to));
+					if (!ePv.seen)
+						pq.add(e2);
+				}
+			}
+
+		}
+
+		return wmst;
+	}
+
+	public static void main(String[] args) throws FileNotFoundException {
+
+		Scanner in;
+
+		if (args.length > 0) {
+			File inputFile = new File(args[0]);
+			in = new Scanner(inputFile);
+		} else {
+			in = new Scanner(System.in);
+		}
+
 		Graph g = Graph.readGraph(in);
-	    Graph.Vertex s = g.getVertex(1);
-	
+		Graph.Vertex s = g.getVertex(1);
+
 		Timer timer = new Timer();
 		PrimMST mst = new PrimMST(g);
 		int wmst = mst.prim1(s);
 		timer.end();
-	    System.out.println(wmst);
-    }
+		System.out.println(wmst);
+	}
 }

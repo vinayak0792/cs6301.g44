@@ -1,4 +1,4 @@
-package cs6301.g44;
+package cs6301.g44.SP6;
 
 import java.util.PriorityQueue;
 
