@@ -29,6 +29,10 @@ How to input values for the program
 4
 5
 
+solution
+2 3 5 1
+11
+
 
 Problem 2:
 HuffTree.java - a class for representing coding trees
