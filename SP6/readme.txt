@@ -39,3 +39,12 @@ Code for A is: 0
 Code for C is: 10
 Code for G is: 110
 Code for T is: 111
+
+
+Problem 3:
+PerfectPower.java - Program which genrates perfect powers upto range n
+Sample run:
+Enter the range n:
+10
+Perfect powers are: 
+ 4 8 9
