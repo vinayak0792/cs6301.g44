@@ -29,6 +29,10 @@ How to input values for the program
 4
 5
 
+solution
+2 3 5 1
+11
+
 
 Problem 2:
 HuffTree.java - a class for representing coding trees
@@ -39,3 +43,12 @@ Code for A is: 0
 Code for C is: 10
 Code for G is: 110
 Code for T is: 111
+
+
+Problem 3:
+PerfectPower.java - Program which genrates perfect powers upto range n
+Sample run:
+Enter the range n:
+10
+Perfect powers are: 
+ 4 8 9
