@@ -140,7 +140,27 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Iterate elements in sorted order of keys
 	 */
 	public Iterator<T> iterator() {
-		return null;
+		Iterator<T> it = new Iterator<T>() {
+			private ArrayDeque<Entry<T>> anc = new ArrayDeque<>();
+			private Entry<T> current = root;
+			
+			public boolean hasNext() {
+				return (!anc.isEmpty() || current != null);
+			}
+			
+			public Entry<T> next(){
+				while(current != null) {
+					anc.add(current);
+					current = current.left;
+				}
+				current = anc.pop();
+				Entry<T> cur = current;
+				current = current.right;
+				return cur;
+			}
+			
+		};
+		return it;
 	}
 
 	public static void main(String[] args) {
