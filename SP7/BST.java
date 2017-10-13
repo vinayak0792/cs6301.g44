@@ -1,8 +1,9 @@
-package cs6301.g44;
+package cs6301.g44.SP7;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	static class Entry<T> {
@@ -33,7 +34,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	// Helper function that looks for an element X in the BST.
 	// ancestor.peek() is parent of the root.
 	Entry<T> find(Entry<T> t, T x) {
-		
 		if (t == null || t.element == x)
 			return t;
 		while (true) {
@@ -71,8 +71,8 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * tree that is equal to x is returned, null otherwise.
 	 */
 	public T get(T x) {
-		Entry<T> ele=find(root,x);
-		if(ele.element.compareTo(x)==0)
+		Entry<T> ele = find(root, x);
+		if (ele.element.compareTo(x) == 0)
 			return ele.element;
 		else
 			return null;
@@ -108,7 +108,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		if (root == null) {
 			return null;
 		}
-		
+
 		Entry<T> t = find(x);
 		if (t.element.compareTo(x) != 0) {
 			return null;
@@ -120,7 +120,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			ancestors.push(t);
 			Entry<T> minRight = find(t.right, t.element);
 			t.element = minRight.element;
-			//ancestors.push(t);
+			// ancestors.push(t);
 			bypass(minRight);
 		}
 		size--;
@@ -132,7 +132,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		Entry<T> c = t.left == null ? t.right : t.left;
 		if (pt == null)
 			root = c;
-		else if (pt.left.element.compareTo(t.element)==0) {
+		else if (pt.left.element.compareTo(t.element) == 0) {
 			pt.left = c;
 		} else
 			pt.right = c;
@@ -142,11 +142,47 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Iterate elements in sorted order of keys
 	 */
 	public Iterator<T> iterator() {
-		return null;
+		return new BSTIterator();
 	}
-	
-	
-	
+
+	private class BSTIterator implements Iterator<T> {
+		Stack<Entry<T>> ancestors = new Stack<Entry<T>>();
+
+		public BSTIterator() {
+			min(root);
+		}
+
+		void min(Entry<T> node) {
+			while (node != null) {
+				ancestors.push(node);
+				node = node.left;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.Iterator#hasNext()
+		 */
+		@Override
+		public boolean hasNext() {
+			return !ancestors.isEmpty();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.Iterator#next()
+		 */
+		@Override
+		public T next() {
+			Entry<T> node = ancestors.pop();
+			min(node.right);
+			return node.element;
+		}
+
+	}
+
 	public static void main(String[] args) {
 		BST<Integer> t = new BST<>();
 		Scanner in = new Scanner(System.in);
@@ -161,21 +197,25 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 				t.remove(-x);
 				t.printTree();
 			} else {
-				 Comparable[] arr = t.toArray();
-				 System.out.print("Final: ");
-				 for (int i = 0; i < t.size; i++) {
-				 System.out.print(arr[i] + " ");
-				 }
-				 System.out.println();
-				 return;
+				Comparable<Integer>[] arr = t.toArray();
+				System.out.print("Final: ");
+				for (int i = 0; i < t.size; i++) {
+					System.out.print(arr[i] + " ");
+				}
+				System.out.println();
+				return;
 			}
 		}
 	}
 
 	// TODO: Create an array with the elements using in-order traversal of tree
-	public Comparable[] toArray() {
+	public Comparable<T>[] toArray() {
 		Comparable[] arr = new Comparable[size];
-		/* write code to place elements in array here */
+		Iterator<T> it = iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			arr[i++] = it.next();
+		}
 		return arr;
 	}
 
