@@ -1,8 +1,9 @@
-package cs6301.g44;
+
+/** Starter code for AVL Tree
+ */
+package cs6301.g44.SP7;
 
 import java.util.Scanner;
-
-import cs6301.g44.BST.Entry;
 
 public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 
@@ -11,8 +12,12 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 
 		Entry(T x, Entry<T> left, Entry<T> right) {
 			super(x, left, right);
-			height = 1;
+			height = 0;
 		}
+	}
+
+	AVLTree() {
+		super();
 	}
 
 	int height(Entry<T> h) {
@@ -20,14 +25,6 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			return 0;
 
 		return h.height;
-	}
-
-	Entry<T> getAVLEntry(BST.Entry<T> node) {
-		return (Entry<T>) node;
-	}
-
-	int max(int a, int b) {
-		return (a > b) ? a : b;
 	}
 
 	public Entry<T> rightRotate(Entry<T> node) {
@@ -39,8 +36,8 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		node.left = temp2;
 
 		// updating height
-		node.height = max(height(getAVLEntry(node.left)), height(getAVLEntry(node.right))) + 1;
-		temp1.height = max(height(getAVLEntry(temp1.left)), height(getAVLEntry(temp1.right))) + 1;
+		node.height = Math.max(height(getAVLEntry(node.left)), height(getAVLEntry(node.right))) + 1;
+		temp1.height = Math.max(height(getAVLEntry(temp1.left)), height(getAVLEntry(temp1.right))) + 1;
 
 		return temp1;
 	}
@@ -54,8 +51,8 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		node.right = temp2;
 
 		// updating height
-		node.height = max(height(getAVLEntry(node.left)), height(getAVLEntry(node.right))) + 1;
-		temp1.height = max(height(getAVLEntry(temp1.left)), height(getAVLEntry(temp1.right))) + 1;
+		node.height = Math.max(height(getAVLEntry(node.left)), height(getAVLEntry(node.right))) + 1;
+		temp1.height = Math.max(height(getAVLEntry(temp1.left)), height(getAVLEntry(temp1.right))) + 1;
 		return temp1;
 
 	}
@@ -64,24 +61,54 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 	public int getBalance(Entry<T> N) {
 		if (N == null)
 			return 0;
-		System.out.println("Balance "+ (height(getAVLEntry(N.left)) - height(getAVLEntry(N.right))) );
 		return height(getAVLEntry(N.left)) - height(getAVLEntry(N.right));
 	}
 
-	
-	void updateHeight() {
-		Entry<T> parent=getAVLEntry(ancestors.peek());
-		
-		if(parent.left == null || parent.right == null){
+	void updateHeight(int i) {
+		Entry<T> parent = getAVLEntry(ancestors.peek());
+		if (parent == null) {
+			return;
+		} else if (parent.left == null || parent.right == null) {
 			for (BST.Entry<T> t : ancestors) {
-				getAVLEntry(t).height++;
+				if(t != null)
+					getAVLEntry(t).height += i;
 			}
 		}
 	}
-	
-	@Override
+
+	Entry<T> getAVLEntry(BST.Entry<T> t) {
+		return (Entry<T>) t;
+	}
+
+	void repair(int i, T x) {
+		// System.out.println("\nroot height Before " +
+		// getAVLEntry(root).height);
+		updateHeight(i);
+
+		// System.out.println("root height after " + getAVLEntry(root).height);
+		int balance = getBalance(getAVLEntry(root));
+
+		if (balance > 1 && x.compareTo(root.left.element) < 0)
+			root = rightRotate(getAVLEntry(root));
+
+		// Right Right Case
+		if (balance < -1 && x.compareTo(root.right.element) > 0)
+			root = leftRotate(getAVLEntry(root));
+
+		// Left Right Case
+		if (balance > 1 && x.compareTo(root.left.element) > 0) {
+			root.left = leftRotate(getAVLEntry(root.left));
+			root = rightRotate(getAVLEntry(root));
+		}
+
+		// Right Left Case
+		if (balance < -1 && x.compareTo(root.right.element) < 0) {
+			root.right = rightRotate(getAVLEntry(root.right));
+			root = leftRotate(getAVLEntry(root));
+		}
+	}
+
 	public boolean add(T x) {
-		ancestors.clear();
 		Entry<T> newElement = new Entry<T>(x, null, null);
 
 		if (root == null) {
@@ -93,40 +120,15 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		if (t.element.compareTo(x) == 0) {
 			t.element = x;
 			return false;
-		} else if (x.compareTo(t.element) < 0){
+		} else if (x.compareTo(t.element) < 0) {
 			t.left = newElement;
-			
-		}
-		else{
+
+		} else {
 			t.right = newElement;
 		}
-			
+
 		size++;
-		System.out.println("\nroot height Before "+getAVLEntry(root).height);
-		updateHeight();
-		
-		System.out.println("root height after "+getAVLEntry(root).height);
-		int balance = getBalance(getAVLEntry(root));
-
-		if (balance > 1 && x.compareTo(root.left.element) < 0)
-			root=rightRotate(getAVLEntry(root));
-
-		// Right Right Case
-		if (balance < -1 && x.compareTo(root.right.element) > 0)
-			root=leftRotate(getAVLEntry(root));
-
-		// Left Right Case
-		if (balance > 1 && x.compareTo(root.left.element) > 0) {
-			root.left=leftRotate(getAVLEntry(root.left));
-			root=rightRotate(getAVLEntry(root));
-		}
-
-		// Right Left Case
-		if (balance < -1 && x.compareTo(root.right.element) < 0) {
-			root.right=rightRotate(getAVLEntry(root.right));
-			root=leftRotate(getAVLEntry(root));
-		}
-		
+		//repair(1, x);
 		return true;
 	}
 
@@ -138,11 +140,14 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			if (x > 0) {
 				System.out.print("Add " + x + " : ");
 				t.add(x);
-				System.out.println("Root Element "+t.root.element);
+				t.repair(1, x);
+				System.out.println(t.root.element);
 				t.printTree();
 			} else if (x < 0) {
 				System.out.print("Remove " + x + " : ");
 				t.remove(-x);
+				t.repair(-1, x);
+				System.out.println(t.root.element);
 				t.printTree();
 			} else {
 				Comparable<Integer>[] arr = t.toArray();
@@ -155,5 +160,4 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			}
 		}
 	}
-
 }

@@ -19,7 +19,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 
 	Entry<T> root;
 	int size;
-	ArrayDeque<Entry<T>> ancestors = new ArrayDeque<>();
+	Stack<Entry<T>> ancestors;
 
 	public BST() {
 		root = null;
@@ -28,6 +28,8 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 
 	// Find x in tree. Returns node where search ends.
 	Entry<T> find(T x) {
+		ancestors = new Stack<>();
+		ancestors.push(null);
 		return find(root, x);
 	}
 
@@ -38,18 +40,20 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			return t;
 		while (true) {
 			if (x.compareTo(t.element) < 0) {
-				if (t.left == null)
+				if (t.left == null) {
+					ancestors.push(t);
 					break;
-				else {
+				} else {
 					ancestors.push(t);
 					t = t.left;
 				}
 			} else if (t.element.compareTo(x) == 0)
 				break;
 			else {
-				if (t.right == null)
+				if (t.right == null) {
+					ancestors.push(t);
 					break;
-				else {
+				} else {
 					ancestors.push(t);
 					t = t.right;
 				}
@@ -104,7 +108,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Remove x from tree. Return x if found, otherwise return null
 	 */
 	public T remove(T x) {
-		ancestors.removeAll(ancestors);
 		if (root == null) {
 			return null;
 		}
@@ -132,7 +135,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		Entry<T> c = t.left == null ? t.right : t.left;
 		if (pt == null)
 			root = c;
-		else if (pt.left.element.compareTo(t.element) == 0) {
+		else if (pt.left!= null && pt.left.element.compareTo(t.element) == 0) {
 			pt.left = c;
 		} else
 			pt.right = c;
@@ -149,35 +152,25 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		Stack<Entry<T>> ancestors = new Stack<Entry<T>>();
 
 		public BSTIterator() {
-			min(root);
+			nextElement(root);
 		}
 
-		void min(Entry<T> node) {
+		void nextElement(Entry<T> node) {
 			while (node != null) {
 				ancestors.push(node);
 				node = node.left;
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Iterator#hasNext()
-		 */
 		@Override
 		public boolean hasNext() {
 			return !ancestors.isEmpty();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Iterator#next()
-		 */
 		@Override
 		public T next() {
 			Entry<T> node = ancestors.pop();
-			min(node.right);
+			nextElement(node.right);
 			return node.element;
 		}
 
