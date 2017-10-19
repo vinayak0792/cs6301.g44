@@ -70,7 +70,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			return;
 		} else if (parent.left == null || parent.right == null) {
 			for (BST.Entry<T> t : ancestors) {
-				if(t != null)
+				if (t != null)
 					getAVLEntry(t).height += i;
 			}
 		}
@@ -128,7 +128,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 		}
 
 		size++;
-		//repair(1, x);
+		repair(1, x);
 		return true;
 	}
 
@@ -140,7 +140,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 			if (x > 0) {
 				System.out.print("Add " + x + " : ");
 				t.add(x);
-				t.repair(1, x);
+				// t.repair(1, x);
 				System.out.println(t.root.element);
 				t.printTree();
 			} else if (x < 0) {

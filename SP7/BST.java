@@ -1,6 +1,5 @@
 package cs6301.g44.SP7;
 
-import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
@@ -41,7 +40,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		while (true) {
 			if (x.compareTo(t.element) < 0) {
 				if (t.left == null) {
-					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -51,7 +49,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 				break;
 			else {
 				if (t.right == null) {
-					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -108,17 +105,28 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Remove x from tree. Return x if found, otherwise return null
 	 */
 	public T remove(T x) {
+		// If the tree does not exist return null.
 		if (root == null) {
 			return null;
 		}
 
+		// Find the element in the tree.
 		Entry<T> t = find(x);
+
+		// If not found return null.
 		if (t.element.compareTo(x) != 0) {
 			return null;
 		}
+
+		// Element is present in the tree.
 		T result = t.element;
+
+		// If the element has just one child.
 		if (t.left == null || t.right == null)
 			bypass(t);
+
+		// If the element has both the children, pick the smallest element in
+		// the right subtree to replace it.
 		else {
 			ancestors.push(t);
 			Entry<T> minRight = find(t.right, t.element);
@@ -135,7 +143,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		Entry<T> c = t.left == null ? t.right : t.left;
 		if (pt == null)
 			root = c;
-		else if (pt.left!= null && pt.left.element.compareTo(t.element) == 0) {
+		else if (pt.left != null && pt.left.element.compareTo(t.element) == 0) {
 			pt.left = c;
 		} else
 			pt.right = c;
