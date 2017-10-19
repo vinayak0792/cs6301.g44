@@ -1,17 +1,43 @@
-package cs6301.g44.SP7;
+package cs6301.g44;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SP7InterviewQues {
 
+	static <T extends Comparable<? super T>> T[] exactlyOnce(T[] A) {
+		Map<T, Integer> nums = new TreeMap<>();
+
+		int length = A.length;
+		for (T x : A) {
+			int value = 1;
+			if (nums.containsKey(x)) {
+				value = nums.get(x) + 1;
+				length -= 2;
+			}
+			nums.put(x, value);
+		}
+
+		T[] B = (T[]) new Comparable[length];
+		int i = 0;
+		for (T x : A) {
+			if (!(nums.get(x) > 1)) {
+				B[i++] = x;
+			}
+
+		}
+
+		return B;
+	}
+
 	static int howMany(int[] A, int X) {
-		HashMap<Integer, Integer> elements = new HashMap<>();
+		Map<Integer, Integer> elements = new TreeMap<>();
 		if (A.length < 2)
 			return 0;
 
 		for (int i = 0; i < A.length; i++) {
-			int value = 0;
+			int value = 1;
 			if (elements.get(A[i]) != null) {
 				value = elements.get(A[i]) + 1;
 			}
