@@ -117,9 +117,10 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		Entry<T> t = getSplay(find(x));
 		if(t != null && t.element == x) {
 			splay(t);
+			return true;
 		}
-		
-		return true;
+		else
+			return false;
 	}
 	
 	public boolean add(T x) {	// taken from AVLTree
