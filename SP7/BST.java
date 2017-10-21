@@ -40,6 +40,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		while (true) {
 			if (x.compareTo(t.element) < 0) {
 				if (t.left == null) {
+					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -49,6 +50,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 				break;
 			else {
 				if (t.right == null) {
+					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -88,6 +90,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		if (root == null) {
 			root = newElement;
 			size++;
+			return true;
 		}
 		Entry<T> t = find(x);
 		if (t.element.compareTo(x) == 0) {
