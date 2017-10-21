@@ -22,19 +22,23 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 //			pt = ancestors.pop();
 //			gt = ancestors.pop();
 			
-			if(root.left.element == node.element || root.right == node) {	//	Zig rotation
-				if(root.left == node)
-					node = rightRotate(root);
-				else
-					node = leftRotate(root);
-				
+			if(root.left.element.compareTo(node.element) == 0) {	//	Zig rotation
+				node = rightRotate(root);
 			}
-			else if()
-			(tmp.left.left == node || tmp.right.right == node) {	//	Zig-Zig rotation
-				
+			else if(root.right.element.compareTo(node.element) == 0) {
+				node = leftRotate(root);
 			}
-			else if(tmp.left.right == node || tmp.right.left == node) {	//	Zig-Zag rotation
-				
+			else if(tmp.left.left.element.compareTo(node.element) == 0) {	//	Zig-Zig rotation
+				node = right2Rotate(tmp);
+			}
+			else if(tmp.right.right.element.compareTo(node.element) == 0) {
+				node = left2Rotate(tmp);
+			}
+			else if(tmp.left.right.element.compareTo(node.element) == 0 ) {	//	Zig-Zag rotation
+				node = leftrightRotate(tmp);
+			}
+			else if(tmp.right.left.element.compareTo(node.element) == 0) {
+				node = rightleftRotate(tmp);
 			}
 		}
 		 
