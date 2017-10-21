@@ -86,17 +86,26 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		return child;
 	}
 	
-	public Entry<T> rightleftRotate(Entry<T> node){
-		Entry<T> child = node.left;
+	public Entry<T> rightleftRotate(Entry<T> gt){	//right-left
+		Entry<T> p = gt.right;
+		Entry<T> child = p.left;
+		gt.right = child.left;
+		p.left = child.right;
+		child.left = gt;
+		child.right = p;
 		return child;
 	}
 	
-	public Entry<T> leftrightRotate(Entry<T> node){
-		Entry<T> child = node.left;
+	public Entry<T> leftrightRotate(Entry<T> gt){	//left-right
+		Entry<T> p = gt.left;
+		Entry<T> child = p.right;
+		gt.left = child.right;
+		p.right = child.left;
+		child.left = p;
+		child.right = gt;
 		return child;
 	}
 }
-
 
 
 
