@@ -24,7 +24,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		return (Entry<T>) t;
 	}
 	
-	public Entry<T> splay(Entry<T> node){
+	public void splay(Entry<T> node){
 		
 		while(node.parent != null) {
 			
@@ -55,7 +55,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			}
 		}
 		root = node; 
-		return node;
+		
 	}
 	
 	public Entry<T> rightRotate(Entry<T> node) {
