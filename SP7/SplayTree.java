@@ -153,7 +153,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		if (root == null) {
 			root = newElement;
 			newElement.parent = null;
-			size++;
+			//size++;
 		}
 
 		Entry<T> t = getSplay(find(x));
@@ -169,7 +169,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			newElement.parent = t;
 		}
 
-		size++;
+		//size++;
 		splay(newElement);
 		return true;
 	}
@@ -211,8 +211,30 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 	}
 	
 	public static void main(String[] args) {
-		SplayTree<Integer> st = new SplayTree<>();
-		//st.add(1);
+		SplayTree<Integer> t = new SplayTree<>();
+		Scanner in = new Scanner(System.in);
+		while (in.hasNext()) {
+			int x = in.nextInt();
+			if (x > 0) {
+				System.out.print("Add " + x + " : ");
+				t.add(x);
+				t.printTree();
+				
+			} else if (x < 0) {
+				System.out.print("Remove " + x + " : ");
+				t.remove(-x);
+				t.printTree();
+				
+			} else {
+				Comparable<Integer>[] arr = t.toArray();
+				System.out.print("Final: ");
+				for (int i = 0; i < t.size; i++) {
+					System.out.print(arr[i] + " ");
+				}
+				System.out.println();
+				return;
+			}
+		}
 	}
 }
 
