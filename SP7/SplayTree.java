@@ -31,27 +31,30 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			Entry<T> p = node.parent;	//parent of the node
 			Entry<T> gp = p.parent;		//grandparent of the node
 			
-			// ROTATION NEEDS UPDATING
 			if(gp == null) {
 				if(p.left.element.compareTo(node.element) == 0) {	//	Zig rotation
-					rightRotate(p);
+					rightRotate(node,p);
 				}
 				else if(p.right.element.compareTo(node.element) == 0) {
-					leftRotate(p);
+					leftRotate(node,p);
 				}
 			}
 			else {
 				if(gp.left.left.element.compareTo(node.element) == 0) {	//	Zig-Zig rotation
-					node = right2Rotate(gp);
+					rightRotate(p,gp);
+					rightRotate(node,p);
 				}
 				else if(gp.right.right.element.compareTo(node.element) == 0) {
-					node = left2Rotate(gp);
+					leftRotate(p,gp);
+					leftRotate(node,p);
 				}
 				else if(gp.left.right.element.compareTo(node.element) == 0 ) {	//	Zig-Zag rotation
-					node = leftrightRotate(gp);
+					leftRotate(p,gp);
+					rightRotate(node,p);
 				}
 				else if(gp.right.left.element.compareTo(node.element) == 0) {
-					node = rightleftRotate(gp);
+					rightRotate(p,gp);
+					leftRotate(node,p);
 				}
 			}
 		}
@@ -59,8 +62,8 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		
 	}
 	
-	public void rightRotate(Entry<T> p) {
-		Entry<T> child = getSplay(p.left);
+	public void rightRotate(Entry<T> child, Entry<T> p) {
+		//Entry<T> child = getSplay(p.left);
 		if(p.parent != null) {
 			if(p == p.parent.left)
 				p.parent.left = child;
@@ -77,8 +80,8 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 				
 	}
 	
-	public void leftRotate(Entry<T> p) {
-		Entry<T> child = getSplay(p.right);
+	public void leftRotate(Entry<T> child, Entry<T> p) {
+		//Entry<T> child = getSplay(p.right);
 		if(p.parent != null) {
 			if(p == p.parent.left)
 				p.parent.left = child;
