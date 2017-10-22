@@ -27,7 +27,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 
 	// Find x in tree. Returns node where search ends.
 	Entry<T> find(T x) {
-		ancestors = new Stack<>();
+		ancestors = new Stack<Entry<T>>();
 		ancestors.push(null);
 		return find(root, x);
 	}
@@ -40,7 +40,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		while (true) {
 			if (x.compareTo(t.element) < 0) {
 				if (t.left == null) {
-					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -50,7 +49,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 				break;
 			else {
 				if (t.right == null) {
-					ancestors.push(t);
 					break;
 				} else {
 					ancestors.push(t);
@@ -81,18 +79,27 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			return null;
 	}
 
+	boolean add(T x) {
+		Entry<T> newElement = new Entry<T>(x, null, null);
+		if (add(newElement))
+			return true;
+		else
+			return false;
+	}
+
 	/**
 	 * TO DO: Add x to tree. If tree contains a node with same key, replace
 	 * element by x. Returns true if x is a new element added to tree.
 	 */
-	public boolean add(T x) {
-		Entry<T> newElement = new Entry<T>(x, null, null);
+	public boolean add(Entry<T> newElement) {
+		T x = newElement.element;
 		if (root == null) {
 			root = newElement;
 			size++;
 			return true;
 		}
 		Entry<T> t = find(x);
+		ancestors.push(t);
 		if (t.element.compareTo(x) == 0) {
 			t.element = x;
 			return false;
@@ -107,6 +114,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	/**
 	 * TO DO: Remove x from tree. Return x if found, otherwise return null
 	 */
+
 	public T remove(T x) {
 		// If the tree does not exist return null.
 		if (root == null) {
@@ -146,7 +154,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 		Entry<T> c = t.left == null ? t.right : t.left;
 		if (pt == null)
 			root = c;
-		else if (pt.left != null && pt.left.element.compareTo(t.element) == 0) {
+		else if (pt.left == (t)) {
 			pt.left = c;
 		} else
 			pt.right = c;
@@ -195,10 +203,12 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			if (x > 0) {
 				System.out.print("Add " + x + " : ");
 				t.add(x);
+				System.out.println(t.root.element);
 				t.printTree();
 			} else if (x < 0) {
 				System.out.print("Remove " + x + " : ");
 				t.remove(-x);
+				System.out.println(t.root.element);
 				t.printTree();
 			} else {
 				Comparable<Integer>[] arr = t.toArray();
