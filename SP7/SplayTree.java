@@ -31,12 +31,13 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			Entry<T> p = node.parent;	//parent of the node
 			Entry<T> gp = p.parent;		//grandparent of the node
 			
+			// ROTATION NEEDS UPDATING
 			if(gp == null) {
 				if(p.left.element.compareTo(node.element) == 0) {	//	Zig rotation
-					node = rightRotate(p);
+					rightRotate(p);
 				}
 				else if(p.right.element.compareTo(node.element) == 0) {
-					node = leftRotate(p);
+					leftRotate(p);
 				}
 			}
 			else {
@@ -58,60 +59,80 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		
 	}
 	
-	public Entry<T> rightRotate(Entry<T> node) {
-		Entry<T> child = getSplay(node.left);
-		node.left = child.right;
-		child.right = node;
-		return child;
+	public void rightRotate(Entry<T> p) {
+		Entry<T> child = getSplay(p.left);
+		if(p.parent != null) {
+			if(p == p.parent.left)
+				p.parent.left = child;
+			else
+				p.parent.right = child;
+		}
+		if(child.right != null)
+			getSplay(child.right).parent = p;
 		
-	}
-	
-	public Entry<T> leftRotate(Entry<T> node) {
-		Entry<T> child = node.right;
-		node.right = child.left;
-		child.left = node;
-		return child;
-	}
-	
-	public Entry<T> right2Rotate(Entry<T> gt){	//right-right
-		Entry<T> p = gt.left;
-		gt.left = p.right;
-		p.right = gt;
-		Entry<T> child = p.left;
+		child.parent = p.parent;
+		p.parent = child;
 		p.left = child.right;
 		child.right = p;
-		return child;
+				
 	}
 	
-	public Entry<T> left2Rotate(Entry<T> gt){	//left-left
-		Entry<T> p = gt.right;
-		gt.right = p.left;
-		p.left = gt;
-		Entry<T> child = p.right;
+	public void leftRotate(Entry<T> p) {
+		Entry<T> child = getSplay(p.right);
+		if(p.parent != null) {
+			if(p == p.parent.left)
+				p.parent.left = child;
+			else
+				p.parent.right = child;
+		}
+		if(child.left != null)
+			getSplay(child.left).parent = p;
+		
+		child.parent = p.parent;
+		p.parent = child;
 		p.right = child.left;
 		child.left = p;
-		return child;
 	}
 	
-	public Entry<T> rightleftRotate(Entry<T> gt){	//right-left
-		Entry<T> p = gt.right;
-		Entry<T> child = p.left;
-		gt.right = child.left;
-		p.left = child.right;
-		child.left = gt;
-		child.right = p;
-		return child;
-	}
-	
-	public Entry<T> leftrightRotate(Entry<T> gt){	//left-right
-		Entry<T> p = gt.left;
-		Entry<T> child = p.right;
-		gt.left = child.right;
-		p.right = child.left;
-		child.left = p;
-		child.right = gt;
-		return child;
-	}
+//	public Entry<T> right2Rotate(Entry<T> gt){	//right-right
+//		Entry<T> p = gt.left;
+//		gt.left = p.right;
+//		p.right = gt;
+//		Entry<T> child = p.left;
+//		p.left = child.right;
+//		child.right = p;
+//		return child;
+//	}
+//	
+//	public Entry<T> left2Rotate(Entry<T> gt){	//left-left
+//		Entry<T> p = gt.right;
+//		gt.right = p.left;
+//		p.left = gt;
+//		Entry<T> child = p.right;
+//		p.right = child.left;
+//		child.left = p;
+//		return child;
+//	}
+//	
+//	public Entry<T> rightleftRotate(Entry<T> gt){	//right-left
+//		Entry<T> p = gt.right;
+//		Entry<T> child = p.left;
+//		gt.right = child.left;
+//		p.left = child.right;
+//		child.left = gt;
+//		child.right = p;
+//		return child;
+//	}
+//	
+//	public Entry<T> leftrightRotate(Entry<T> gt){	//left-right
+//		Entry<T> p = gt.left;
+//		Entry<T> child = p.right;
+//		gt.left = child.right;
+//		p.right = child.left;
+//		child.left = p;
+//		child.right = gt;
+//		return child;
+//	}
 	
 	public boolean contains(T x) {
 		Entry<T> t = getSplay(find(x));
@@ -148,6 +169,42 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		size++;
 		splay(newElement);
 		return true;
+	}
+	
+	public T remove(T x) {
+		Entry<T> node = getSplay(find(x));
+		T result;
+		result = node.element;
+		if(node == null)
+			return null;
+		splay(node);
+		if(node.left != null && node.right != null) {
+			Entry<T> tmp = getSplay(node.left);
+			while(tmp.right != null)
+				tmp = getSplay(tmp.right);
+			
+			tmp.right = node.right;
+			getSplay(node.right).parent = tmp;
+			getSplay(node.left).parent = null;
+			root = node.right;
+			 
+		}
+		else if(node.right != null) {
+			getSplay(node.right).parent = null;
+			root = node.right;
+		}
+		else if(node.left != null) {
+			getSplay(node.left).parent = null;
+			root = node.left;
+		}
+		else {
+			root = null;
+		}
+		node.parent = null;
+        node.left = null;
+        node.right = null;
+        node = null;
+        return result;
 	}
 	
 	public static void main(String[] args) {
