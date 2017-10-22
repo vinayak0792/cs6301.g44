@@ -62,7 +62,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		
 	}
 	
-	public void rightRotate(Entry<T> child, Entry<T> p) {
+	private void rightRotate(Entry<T> child, Entry<T> p) {
 		//Entry<T> child = getSplay(p.left);
 		if(p.parent != null) {
 			if(p == p.parent.left)
@@ -80,7 +80,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 				
 	}
 	
-	public void leftRotate(Entry<T> child, Entry<T> p) {
+	private void leftRotate(Entry<T> child, Entry<T> p) {
 		//Entry<T> child = getSplay(p.right);
 		if(p.parent != null) {
 			if(p == p.parent.left)
@@ -97,7 +97,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		child.left = p;
 	}
 	
-
+	// finds the item if present or else nearest one
 	public boolean contains(T x) {
 		Entry<T> t = getSplay(find(x));
 		if(t != null && t.element == x) {
@@ -108,6 +108,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			return false;
 	}
 	
+	// add the item to the tree and splay
 	public boolean add(T x) {	// taken from AVLTree
 		Entry<T> newElement = new Entry<T>(x, null, null);
 
@@ -135,6 +136,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		return true;
 	}
 	
+	// remove the item after splay and select a new root
 	public T remove(T x) {
 		Entry<T> node = getSplay(find(x));
 		T result;
