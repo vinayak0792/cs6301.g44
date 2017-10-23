@@ -1,5 +1,9 @@
 package cs6301.g44.SP7;
 
+/**
+ * This program implements the Binary Search Tree
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
@@ -33,7 +37,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	}
 
 	// Helper function that looks for an element X in the BST.
-	// ancestor.peek() is parent of the root.
 	public Entry<T> find(Entry<T> t, T x) {
 		if (t == null || t.element == x)
 			return t;
@@ -71,6 +74,7 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 	 * TO DO: Is there an element that is equal to x in the tree? Element in
 	 * tree that is equal to x is returned, null otherwise.
 	 */
+
 	public T get(T x) {
 		Entry<T> ele = find(root, x);
 		if (ele.element.compareTo(x) == 0)
@@ -142,7 +146,6 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			ancestors.push(t);
 			Entry<T> minRight = find(t.right, t.element);
 			t.element = minRight.element;
-			// ancestors.push(t);
 			bypass(minRight);
 		}
 		size--;
@@ -203,12 +206,10 @@ public class BST<T extends Comparable<? super T>> implements Iterable<T> {
 			if (x > 0) {
 				System.out.print("Add " + x + " : ");
 				t.add(x);
-				System.out.println(t.root.element);
 				t.printTree();
 			} else if (x < 0) {
 				System.out.print("Remove " + x + " : ");
 				t.remove(-x);
-				System.out.println(t.root.element);
 				t.printTree();
 			} else {
 				Comparable<Integer>[] arr = t.toArray();

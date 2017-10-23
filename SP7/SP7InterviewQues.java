@@ -1,14 +1,18 @@
 package cs6301.g44.SP7;
 
+/**
+ * This program includes the code for SP7 Q6, Q7, Q8
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class SP7InterviewQues {
 
+	// Function to compute elements that occur exactly once in the given array.
 	static <T extends Comparable<? super T>> T[] exactlyOnce(T[] A) {
 		Map<T, Integer> nums = new TreeMap<>();
-		// ArrayList<T> B = new ArrayList<>();
 		int length = A.length;
 		for (T x : A) {
 			int value = 1;
@@ -31,6 +35,8 @@ public class SP7InterviewQues {
 
 	}
 
+	// Function to compute all the pairs in the given array that sum up to the
+	// given value X.
 	static int howMany(int[] A, int X) {
 		Map<Integer, Integer> elements = new TreeMap<>();
 		if (A.length < 2)
@@ -57,6 +63,8 @@ public class SP7InterviewQues {
 		return howMany / 2;
 	}
 
+	// Function that computes the longest streak on consecutive numbers in a
+	// given array.
 	static int longestStreak(int[] A) {
 		Arrays.sort(A);
 		int longestStreak = 1, currentStreak = 1;
@@ -71,7 +79,4 @@ public class SP7InterviewQues {
 		return longestStreak;
 	}
 
-	public static void main(String[] args) {
-
-	}
 }

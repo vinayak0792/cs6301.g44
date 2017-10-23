@@ -1,8 +1,8 @@
-
-/** Starter code for AVL Tree
- */
 package cs6301.g44.SP7;
-
+/**
+ * This program implements the AVL Tree
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ */
 import java.util.Scanner;
 
 public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
@@ -180,8 +180,9 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 	// Function to add a new element to the tree.
 	public boolean add(T x) {
 		Entry<T> newElement = new Entry<T>(x, null, null);
-		if (super.add(newElement) && size > 1) {
-			repairAdd(x);
+		if (super.add(newElement)) {
+			if (size > 1)
+				repairAdd(x);
 			return true;
 		} else
 			return false;
