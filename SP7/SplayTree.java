@@ -62,7 +62,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		
 	}
 	
-	public void rightRotate(Entry<T> child, Entry<T> p) {
+	private void rightRotate(Entry<T> child, Entry<T> p) {
 		//Entry<T> child = getSplay(p.left);
 		if(p.parent != null) {
 			if(p == p.parent.left)
@@ -80,7 +80,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 				
 	}
 	
-	public void leftRotate(Entry<T> child, Entry<T> p) {
+	private void leftRotate(Entry<T> child, Entry<T> p) {
 		//Entry<T> child = getSplay(p.right);
 		if(p.parent != null) {
 			if(p == p.parent.left)
@@ -97,46 +97,7 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 		child.left = p;
 	}
 	
-//	public Entry<T> right2Rotate(Entry<T> gt){	//right-right
-//		Entry<T> p = gt.left;
-//		gt.left = p.right;
-//		p.right = gt;
-//		Entry<T> child = p.left;
-//		p.left = child.right;
-//		child.right = p;
-//		return child;
-//	}
-//	
-//	public Entry<T> left2Rotate(Entry<T> gt){	//left-left
-//		Entry<T> p = gt.right;
-//		gt.right = p.left;
-//		p.left = gt;
-//		Entry<T> child = p.right;
-//		p.right = child.left;
-//		child.left = p;
-//		return child;
-//	}
-//	
-//	public Entry<T> rightleftRotate(Entry<T> gt){	//right-left
-//		Entry<T> p = gt.right;
-//		Entry<T> child = p.left;
-//		gt.right = child.left;
-//		p.left = child.right;
-//		child.left = gt;
-//		child.right = p;
-//		return child;
-//	}
-//	
-//	public Entry<T> leftrightRotate(Entry<T> gt){	//left-right
-//		Entry<T> p = gt.left;
-//		Entry<T> child = p.right;
-//		gt.left = child.right;
-//		p.right = child.left;
-//		child.left = p;
-//		child.right = gt;
-//		return child;
-//	}
-	
+	// finds the item if present or else nearest one
 	public boolean contains(T x) {
 		Entry<T> t = getSplay(find(x));
 		if(t != null && t.element == x) {
@@ -147,13 +108,14 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			return false;
 	}
 	
+	// add the item to the tree and splay
 	public boolean add(T x) {	// taken from AVLTree
 		Entry<T> newElement = new Entry<T>(x, null, null);
 
 		if (root == null) {
 			root = newElement;
 			newElement.parent = null;
-			size++;
+			//size++;
 		}
 
 		Entry<T> t = getSplay(find(x));
@@ -169,11 +131,12 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 			newElement.parent = t;
 		}
 
-		size++;
+		//size++;
 		splay(newElement);
 		return true;
 	}
 	
+	// remove the item after splay and select a new root
 	public T remove(T x) {
 		Entry<T> node = getSplay(find(x));
 		T result;
@@ -211,8 +174,30 @@ public class SplayTree<T extends Comparable<? super T>> extends BST<T> {
 	}
 	
 	public static void main(String[] args) {
-		SplayTree<Integer> st = new SplayTree<>();
-		//st.add(1);
+		SplayTree<Integer> t = new SplayTree<>();
+		Scanner in = new Scanner(System.in);
+		while (in.hasNext()) {
+			int x = in.nextInt();
+			if (x > 0) {
+				System.out.print("Add " + x + " : ");
+				t.add(x);
+				t.printTree();
+				
+			} else if (x < 0) {
+				System.out.print("Remove " + x + " : ");
+				t.remove(-x);
+				t.printTree();
+				
+			} else {
+				Comparable<Integer>[] arr = t.toArray();
+				System.out.print("Final: ");
+				for (int i = 0; i < t.size; i++) {
+					System.out.print(arr[i] + " ");
+				}
+				System.out.println();
+				return;
+			}
+		}
 	}
 }
 
