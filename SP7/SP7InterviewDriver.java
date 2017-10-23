@@ -1,7 +1,7 @@
 
-package cs6301.g44.SP7;
+package cs6301.g44;
 
-import cs6301.g44.SP7.SP7InterviewQues;
+import cs6301.g44.SP7InterviewQues;
 
 /**
  * This program includes the driver code to test SP7 Q6, Q7, Q8

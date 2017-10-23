@@ -1,4 +1,4 @@
-package cs6301.g44.SP7;
+package cs6301.g44;
 /**
  * This program implements the AVL Tree
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal

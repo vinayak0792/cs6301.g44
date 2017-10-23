@@ -1,4 +1,4 @@
-package cs6301.g44.SP7;
+package cs6301.g44;
 
 /**
  * This program includes the code for SP7 Q6, Q7, Q8
