@@ -1,4 +1,4 @@
-package cs6301.g44;
+package cs6301.g44.SP7;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -8,27 +8,27 @@ public class SP7InterviewQues {
 
 	static <T extends Comparable<? super T>> T[] exactlyOnce(T[] A) {
 		Map<T, Integer> nums = new TreeMap<>();
-
+		// ArrayList<T> B = new ArrayList<>();
 		int length = A.length;
 		for (T x : A) {
 			int value = 1;
 			if (nums.containsKey(x)) {
 				value = nums.get(x) + 1;
-				length -= 2;
+				--length;
 			}
 			nums.put(x, value);
 		}
-
 		T[] B = (T[]) new Comparable[length];
 		int i = 0;
 		for (T x : A) {
 			if (!(nums.get(x) > 1)) {
 				B[i++] = x;
+				// B.add(x);
 			}
 
 		}
-
 		return B;
+
 	}
 
 	static int howMany(int[] A, int X) {
@@ -71,4 +71,7 @@ public class SP7InterviewQues {
 		return longestStreak;
 	}
 
+	public static void main(String[] args) {
+
+	}
 }
