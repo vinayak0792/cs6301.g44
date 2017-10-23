@@ -1,4 +1,8 @@
-package cs6301.g44.SP7;
+/**
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * Selection class consists 3 algorithms to find k largest elements from a given unsorted list of elements.
+ */
+package cs6301.g44;
 
 import java.util.Iterator;
 import java.util.Scanner;
