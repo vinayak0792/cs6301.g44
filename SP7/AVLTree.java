@@ -1,7 +1,8 @@
-
-/** Starter code for AVL Tree
+/**
+ * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
+ * Selection class consists 3 algorithms to find k largest elements from a given unsorted list of elements.
  */
-package cs6301.g44.SP7;
+package cs6301.g44;
 
 import java.util.Scanner;
 
@@ -180,7 +181,8 @@ public class AVLTree<T extends Comparable<? super T>> extends BST<T> {
 	// Function to add a new element to the tree.
 	public boolean add(T x) {
 		Entry<T> newElement = new Entry<T>(x, null, null);
-		if (super.add(newElement) && size > 1) {
+		if (super.add(newElement) ) {
+			if(size>1)
 			repairAdd(x);
 			return true;
 		} else
