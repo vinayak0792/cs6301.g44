@@ -33,10 +33,6 @@ public class RedBlackTree<T extends Comparable<? super T>> extends BST<T> {
             return false;
     }
 
-    /*private Entry<T> getSibling(Entry<T> node, Entry<T> parent) {
-        if (node == null || parent == null) return null;
-        return node == parent.left ? (Entry<T>) parent.right : (Entry<T>) parent.left;
-    }*/
 
     //Repair after insertion
     private void repair(T cur) {
@@ -96,8 +92,6 @@ public class RedBlackTree<T extends Comparable<? super T>> extends BST<T> {
             greatGP.right = rotateRight(grandParent);
         assignColor(parent, false);
         assignColor(grandParent, true);
-        //parent.isRed = false;
-        //grandParent.isRed = true;
 
     }
 
@@ -108,8 +102,6 @@ public class RedBlackTree<T extends Comparable<? super T>> extends BST<T> {
                 rotateLeft(grandParent);
         assignColor(parent, false);
         assignColor(grandParent, true);
-        //parent.isRed = false;
-        //grandParent.isRed = true;
     }
 
     private Entry<T> rotateRight(Entry<T> node) {

@@ -6,10 +6,13 @@ BST.java
 Implementation of Binary Search Tree
 
 AVLTree.java
-Implementation of AVL trees
+Implementation of AVL Tree
 
 RedBlack.java
-Implementation of RedBlack
+Implementation of RedBlack Tree
+
+Splay.java
+Implementation of Splay Tree
 
 SP7InterviewDriver.jaba
 Driver code to run SP7 Q6, Q7, Q8.
