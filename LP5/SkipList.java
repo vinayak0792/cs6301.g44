@@ -13,16 +13,16 @@ import java.util.NoSuchElementException;
 public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	
 	
-	public class Entry<T> {
+	public class Entry<Z> {
 
-		T element;
-		Entry<T>[] next;
+		Z element;
+		Entry<Z>[] next;
 		int[] span;
 		int level;
-		Entry(T data, int level) {
+		Entry(Z data, int level) {
 			element = data;
 			this.level = level;
-			next = (Entry<T>[]) new Entry[level];
+			next = (Entry<Z>[]) new Entry[level];
 			span = new int[level];
 			for(int i = 0; i < level; i++) {
 				span[i] = 0;
@@ -37,25 +37,15 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 
 	public SkipList() {
 		head = new Entry<>(null, 32);
+		tail=null;
 		this.size = 0;
 		this.maxLevel = 32;
 	}
 
 	SkipList(int level) {
 		head = new Entry<>(null, level);
+		tail=null;
 		this.maxLevel = level;
-	}
-
-	int choice(int level) {
-		int l = 1;
-		Random rand = new Random();
-		while(l < level) {
-			if(rand.nextBoolean())
-				l++;
-			else
-				break;
-		}
-		return l;
 	}
 	
 	public int chooseLevel(){
@@ -108,7 +98,7 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 
 	// Add x to list. If x already exists, replace it. Returns true if new node is added to list
 	public boolean add(T x) {
-		int level = choice(maxLevel);
+		int level = chooseLevel();
 		if(this.size == 0) {
 			Entry<T> node = new Entry<>(x, level);
 			for(int i = 0; i < level; i++)
@@ -292,7 +282,7 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	}
 
 	public static void main(String[] args) {
-		SkipList<Integer> list = new SkipList<>(10);
+		SkipList<Integer> list = new SkipList<>();
 		Scanner input = new Scanner(System.in);
 		int size = 20;
 		for(int i = 10; i < size; i++)
