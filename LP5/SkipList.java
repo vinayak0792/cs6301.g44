@@ -2,7 +2,7 @@
  * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
  */
 
-package skip;
+package cs6301.g44;
 
 import java.util.Scanner;
 import java.util.Random;
@@ -36,10 +36,10 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	int maxLevel;
 
 	public SkipList() {
-		head = new Entry<>(null, 32);
+		head = new Entry<>(null, 31);
 		tail=null;
 		this.size = 0;
-		this.maxLevel = 32;
+		this.maxLevel = 31;
 	}
 
 	SkipList(int level) {
@@ -55,7 +55,7 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 		if(level>maxLevel)
 			return ++maxLevel;
 		else
-			return level;
+			return level+1;
 	}
 
 	//Helper function find()
