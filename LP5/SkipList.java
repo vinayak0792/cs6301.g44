@@ -1,7 +1,3 @@
-/**
- * @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
- */
-
 package cs6301.g44;
 
 import java.util.Scanner;
@@ -34,6 +30,7 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	Entry<T> head, tail;
 	int size;
 	int maxLevel;
+	int currMax=0;//current max level in skipList
 
 	public SkipList() {
 		head = new Entry<>(null, 31);
@@ -49,11 +46,11 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	}
 	
 	public int chooseLevel(){
-		int mask=(1<<maxLevel)-1;
+		int mask=(1<<currMax)-1;
 		Random random=new Random();
 		int level=Integer.numberOfTrailingZeros(random.nextInt()&mask);
-		if(level>maxLevel)
-			return ++maxLevel;
+		if(level>currMax)
+			return currMax+1;
 		else
 			return level+1;
 	}
@@ -99,6 +96,11 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	// Add x to list. If x already exists, replace it. Returns true if new node is added to list
 	public boolean add(T x) {
 		int level = chooseLevel();
+		if(level>maxLevel){
+			level=maxLevel;
+		}
+		else
+			level=++currMax;
 		if(this.size == 0) {
 			Entry<T> node = new Entry<>(x, level);
 			for(int i = 0; i < level; i++)
@@ -287,13 +289,16 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 		int size = 20;
 		for(int i = 10; i < size; i++)
 			list.add(i);
-		list.remove(10);
+		System.out.println("Intial list");
+		list.printList();
+		list.remove(12);
+		System.out.println("After removing element 12");
 		list.printList();
 		
-		System.out.println(list.contains(15));
-		System.out.println(list.size());
+		System.out.println("Does list contain 15? "+list.contains(15));
+		System.out.println("List size: "+list.size());
 		list.rebuild();
-		System.out.println(list.size());
-		System.out.println(list.isEmpty());
+		System.out.println("List after rebuilding");
+		list.printList();
 	}
 }
