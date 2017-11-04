@@ -98,9 +98,12 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 		int level = chooseLevel();
 		if(level>maxLevel){
 			level=maxLevel;
+			currMax=maxLevel;
 		}
 		else
-			level=++currMax;
+			if(level>currMax){
+				++currMax;	
+			}
 		if(this.size == 0) {
 			Entry<T> node = new Entry<>(x, level);
 			for(int i = 0; i < level; i++)
