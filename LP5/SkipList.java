@@ -1,4 +1,4 @@
-package cs6301.g44.LP5;
+package cs6301.g44;
 
 /**
  * SkipList.java : Program that provides functionality to add, remove an element to a Skip list along with the other list operations.
@@ -6,6 +6,7 @@ package cs6301.g44.LP5;
  */
 
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Iterator;
 
 public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
@@ -32,7 +33,7 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	int size;
 	int maxLevel;
 	int currMax = 0;// current max level in skipList
-	T last;
+	private T last;
 
 	public SkipList() {
 		head = new Entry<>(null, 31);
@@ -143,23 +144,33 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 	// Remove x from list. Removed element is returned. Return null if x not in
 	// list
 	public T remove(T x) {
-		Entry<T>[] prev = find(x);
-		if (prev[0].next[0].element.compareTo(x) == 0) {
-			Entry<T> node = prev[0].next[0];
-			for (int i = 0; i < node.level; i++) {
-				prev[i].next[i] = node.next[i];
-				prev[i].span[i] = prev[i].span[i] + node.span[i];
-			}
-			for (int i = node.level; i < maxLevel; i++)
-				prev[i].span[i]--;
-
-			if (last.compareTo(x) == 0) {
-				last = prev[0].element;
-			}
-			this.size--;
-			return x;
-		} else
+		if(this.size==0)
+		{
+			System.out.println("Empty List!!");
 			return null;
+		}
+		else
+		{
+			Entry<T>[] prev = find(x);
+			if (prev[0].next[0].element.compareTo(x) == 0) {
+				Entry<T> node = prev[0].next[0];
+				for (int i = 0; i < node.level; i++) {
+					prev[i].next[i] = node.next[i];
+					prev[i].span[i] = prev[i].span[i] + node.span[i];
+				}
+				for (int i = node.level; i < maxLevel; i++)
+					prev[i].span[i]--;
+
+				if (last.compareTo(x) == 0) {
+					last = prev[0].element;
+				}
+				this.size--;
+				return x;
+			} else{
+				System.out.println("Element not found");
+				return null;
+			}
+		}
 	}
 
 	// Return element at index n of list. First element is at index 0.
@@ -288,6 +299,26 @@ public class SkipList<T extends Comparable<? super T>> implements Iterable<T> {
 			System.out.print(it.next() + " ");
 		}
 		System.out.println();
+	}
+	
+	public static void main(String[] args) {
+		SkipList<Integer> list = new SkipList<>();
+		Scanner input = new Scanner(System.in);
+		int size = 20;
+		for(int i = 10; i < size; i++)
+			list.add(i);
+		System.out.println("Intial list");
+		list.printList();
+		System.out.println("Last element: "+list.last());
+		list.remove(12);
+		System.out.println("After removing element 12");
+		list.printList();
+		
+		System.out.println("Does list contain 15? "+list.contains(15));
+		System.out.println("List size: "+list.size());
+		list.rebuild();
+		System.out.println("List after rebuilding");
+		list.printList();
 	}
 
 }
