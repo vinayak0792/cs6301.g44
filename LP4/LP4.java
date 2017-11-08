@@ -130,7 +130,34 @@ public class LP4 {
     // Part e. Return weight of shortest path from s to t using at most k edges
     public int constrainedShortestPath(Vertex t, int k) {
 	// To do
-	return 0;
+    	int[] distance=new int[g.n];
+    	for(int i=0;i<distance.length;i++)
+    		distance[i]=Integer.MAX_VALUE;
+    	distance[s.getName()]=0;
+    	for(Vertex x:g.v){
+    		x.distance=Integer.MAX_VALUE;
+    		x.parent=null;
+    	}
+    	g.getVertex(s.getName()+1).distance=0;
+    	//s.distance=0;
+    	for(int i=1;i<=k;i++){
+    		for(Vertex x:g.v){
+    			for(Edge e:x.adj){
+    				Vertex v=e.otherEnd(x);
+    				if((x.distance!=Integer.MAX_VALUE) && v.distance>x.distance+e.weight){
+    					distance[v.getName()]=x.distance+e.weight;
+    					v.parent=x;
+    					//e.otherEnd(x).distance=x.distance+e.weight;
+    					//e.otherEnd(x).parent=x;
+    				}
+    			}
+    		}
+    		
+    		for(int j=0;j<distance.length;j++)
+    			g.getVertex(j+1).distance=distance[j];
+    		
+    	}
+	return g.getVertex(t.getName()+1).distance;
     }
 
 
