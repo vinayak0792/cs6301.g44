@@ -20,6 +20,8 @@ public class Graph implements Iterable<Graph.Vertex> {
 	public List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
 	public boolean visited;
 	public int inDegree;
+	public int distance;
+	public Vertex parent;
 
 	/**
 	 * Constructor for vertex
