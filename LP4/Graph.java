@@ -1,33 +1,13 @@
-package cs6301.g44;
-
-/**
- * Class to represent a graph
- *  @author rbk
- *  Ver 1.1: 2017/08/28.  Updated some methods to public.  Added getName() to Vertex
- *  Ver 1.2: 2017/09/08.  Added getVertex() method for GraphAlgorithm.java
- *  Ver 1.3: 2017/09/28.  Added isDirected() and additional Vertex constructor
- *  Ver 2.0: 2017/10/11.  Added following OO features to allow the use of
- *  	cs6301.g00.Graph directly from cs6301.gXX, without having to copy the file:
- *	Renamed v to vertex (better name), but v is left as a synonym for vertex
- *	for backward compatibility.  Added a new field m for number of edges.
- *	Added name field to Edge to uniquely identify edges.
- *	Added hashCode, equals to Vertex and Edge for using them as keys in hashmaps.
- *	Changed == to equals() for Vertex and Edge checks for equality.
- *	Added methods fromVertex, toVertex, getWeight, setWeight, getName, setName,
- *	and field "name" to Edge class.
- *	Changed addEdge from void to return the Edge that it created.
- *	Added reverseIterator to Vertex and adj and revAdj fields changed to public.  
- *	Constructors of Vertex and Edge changed to public. 
- *	Added methods edgeSize, clear, setDirected, reverseGraph to Graph.
- */
+package cs6301.g00;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Graph implements Iterable<Graph.Vertex> {
-    Vertex[] v, vertex; // vertices of graph
-    int n; // number of verices in the graph
+    public Vertex[] v; // vertices of graph
+	Vertex[] vertex;
+    public int n; // number of verices in the graph
     int m; // number of edges in the graph
     boolean directed;  // true if graph is directed, false otherwise
 
@@ -37,11 +17,9 @@ public class Graph implements Iterable<Graph.Vertex> {
 
     public static class Vertex implements Iterable<Edge> {
 	int name; // name of the vertex
-	
-	int inDegree=0; //stores inDegree of each vertex
-	boolean visited=false;
-	
 	public List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
+	public boolean visited;
+	public int inDegree;
 
 	/**
 	 * Constructor for vertex
@@ -117,7 +95,7 @@ public class Graph implements Iterable<Graph.Vertex> {
     public static class Edge {
 	Vertex from; // head vertex
 	Vertex to;   // tail vertex
-	int weight;  // weight of edge
+	public int weight;  // weight of edge
 	int name;    // name of edge
 	/**
 	 * Constructor for Edge
@@ -299,7 +277,6 @@ public class Graph implements Iterable<Graph.Vertex> {
 	if(directed) {
 	    from.adj.add(e);
             to.revAdj.add(e);
-            to.inDegree++;
 	} else {
 	    from.adj.add(e);
 	    to.adj.add(e);
@@ -314,7 +291,6 @@ public class Graph implements Iterable<Graph.Vertex> {
 	if(directed) {
 	    from.adj.add(e);
             to.revAdj.add(e);
-            to.inDegree++;
 	} else {
 	    from.adj.add(e);
 	    to.adj.add(e);
