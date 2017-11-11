@@ -25,13 +25,12 @@ public class LP4 {
 
 	// Part a. Return number of topological orders of g
 	public long countTopologicalOrders() {
-		boolean[] visited = new boolean[g.n];
 		int res = 0;
-		getcountTopologicalSorts(visited, res);
+		getcountTopologicalSorts(res);
 		return count;
 	}
 
-	public void getcountTopologicalSorts(boolean[] visited, int res) {
+	public void getcountTopologicalSorts(int res) {
 		boolean flag = false; // to find whether all topological sorts are
 								// checked or not
 
@@ -43,7 +42,7 @@ public class LP4 {
 
 				res++;
 				x.visited = true;
-				getcountTopologicalSorts(visited, res);
+				getcountTopologicalSorts(res);
 
 				x.visited = false;
 				res--;
@@ -64,15 +63,17 @@ public class LP4 {
 	// Part b. Print all topological orders of g, one per line, and
 	// return number of topological orders of g
 	public long enumerateTopologicalOrders() {
-		// To do
-		boolean[] visited = new boolean[g.n];
 		ArrayDeque<Vertex> result = new ArrayDeque<>();
+		Vertex[] res=new Vertex[g.n];
+		int index=0;
 		count = 0;
-		enumTopOrder(result, visited);
+		enumTopOrder(res,index);
 		return count;
 	}
 
-	public void enumTopOrder(ArrayDeque<Vertex> result, boolean[] visited) {
+	
+	
+	public void enumTopOrder(Vertex[] res,int index) {
 		boolean flag = false; // to find whether all topological sorts are
 								// checked or not
 
@@ -81,14 +82,15 @@ public class LP4 {
 				for (Edge ad : x.adj) {
 					ad.otherEnd(x).inDegree--;
 				}
-
-				result.addLast(x);
+				
+				res[index++]=x;
+				//result.addLast(x);
 				x.visited = true;
-				enumTopOrder(result, visited);
+				enumTopOrder(res,index);
 
 				x.visited = false;
-				result.removeLast();
-
+				//result.removeLast();
+				index--;
 				for (Edge ad : x.adj) {
 					ad.otherEnd(x).inDegree++;
 				}
@@ -98,16 +100,16 @@ public class LP4 {
 		}
 
 		if (!flag) {
-			if (result.size() == g.n) {
-				Iterator<Vertex> it = result.descendingIterator();
-				while (it.hasNext())
-					System.out.print(" " + it.next());
+			if(index==g.n){
+			for(int i=0;i<index;i++)
+				System.out.print(" "+res[i]);
+			}
 				System.out.println();
 				count++;
 			}
 
 		}
-	}
+	
 
 	// Part c. Return the number of shortest paths from s to t
 	// Return -1 if the graph has a negative or zero cycle
@@ -129,51 +131,47 @@ public class LP4 {
 		for (Vertex x : g.v) {
 			x.visited = false;
 		}
-
+		System.out.println("bellmanford done");
 		count = 0;
-		ArrayDeque<Vertex> paths = new ArrayDeque<>();
-		dfsCount(s, t, paths);
+		dfsCount(s, t);
 
 		return count;
 	}
 
-	public void dfsPaths(Vertex src, Vertex dst, ArrayDeque<Vertex> paths) {
+	public void dfsPaths(Vertex src, Vertex dst, Vertex[] paths,int index) {
 		if (src.equals(dst)) {
 			count++;
-			paths.addFirst(dst);
-			Iterator<Vertex> it = paths.descendingIterator();
-			while (it.hasNext())
-				System.out.print(" " + it.next());
+			paths[index++]=dst;
+			for(int i=0;i<index;i++)
+				System.out.print(paths[i]+" ");
 			System.out.println();
-			paths.removeFirst();
+			//paths.removeFirst();
 		} else {
 			src.visited = true;
-			paths.push(src);
-
+			//paths.push(src);
+			paths[index++]=src;
 			for (Edge e : src.adj) {
 				if (!e.otherEnd(src).visited && !e.disabled) {
-					dfsPaths(e.otherEnd(src), dst, paths);
+					dfsPaths(e.otherEnd(src), dst, paths,index);
 				}
 			}
 			src.visited = false;
-			paths.pop();
+			index--;
 		}
 	}
 
-	public void dfsCount(Vertex src, Vertex dst, ArrayDeque<Vertex> paths) {
+	public void dfsCount(Vertex src, Vertex dst) {
 		if (src.equals(dst)) {
 			count++;
 		} else {
 			src.visited = true;
-			paths.push(src);
 
 			for (Edge e : src.adj) {
 				if (!e.otherEnd(src).visited && !e.disabled) {
-					dfsCount(e.otherEnd(src), dst, paths);
+					dfsCount(e.otherEnd(src), dst);
 				}
 			}
 			src.visited = false;
-			paths.pop();
 		}
 	}
 
@@ -215,7 +213,6 @@ public class LP4 {
 	// return number of shortest paths from s to t.
 	// Return -1 if the graph has a negative or zero cycle.
 	public long enumerateShortestPaths(Vertex t) {
-		// To do
 		boolean nocycle = bellmanFord(s);
 		if (!nocycle)
 			return -1;
@@ -233,42 +230,41 @@ public class LP4 {
 			x.visited = false;
 		}
 		count = 0;
-		ArrayDeque<Vertex> paths = new ArrayDeque<>();
-		dfsPaths(s, t, paths);
+		Vertex[] path=new Vertex[g.n];
+		int index=0;
+		dfsPaths(s, t, path,index);
 		return count;
 	}
 
 	// Part e. Return weight of shortest path from s to t using at most k edges
 	public int constrainedShortestPath(Vertex t, int k) {
-		// To do
-		int[] distance = new int[g.n]; // parallel array to maintain distance of
-										// each vertex
-		for (int i = 0; i < distance.length; i++)
-			distance[i] = Integer.MAX_VALUE;
-		distance[s.getName()] = 0;
+		
 		for (Vertex x : g.v) {
 			x.distance = Integer.MAX_VALUE;
+			x.prevDistance=Integer.MAX_VALUE;
 			x.parent = null;
 		}
 		g.getVertex(s.getName() + 1).distance = 0;
-		// s.distance=0;
+		g.getVertex(s.getName() + 1).prevDistance = 0;
+		
 		for (int i = 1; i <= k; i++) {
 			for (Vertex x : g.v) {
 				for (Edge e : x.adj) {
 					Vertex v = e.otherEnd(x);
 					if ((x.distance != Integer.MAX_VALUE) && v.distance > x.distance + e.weight) {
-						// Updating distance array.Will update actual vertex
+						// Updating prevDistance.Will update actual vertex
 						// distances after completion of whole single iteration.
-						if (distance[v.getName()] > x.distance + e.weight)
-							distance[v.getName()] = x.distance + e.weight;
+						if (v.prevDistance > x.distance + e.weight)
+							v.prevDistance = x.distance + e.weight;
 						v.parent = x;
 					}
 				}
 			}
 
 			// updating distances after completion of whole iteration
-			for (int j = 0; j < distance.length; j++)
-				g.getVertex(j + 1).distance = distance[j];
+			for(Vertex f:g.v){
+				f.distance=f.prevDistance;
+			}
 		}
 		return g.getVertex(t.getName() + 1).distance;
 	}
@@ -377,7 +373,6 @@ public class LP4 {
 
 			@Override
 			public int compare(Vertex o1, Vertex o2) {
-				// TODO Auto-generated method stub
 				if (o1.distance < o2.distance)
 					return -1;
 				else if (o1.distance > o2.distance)
