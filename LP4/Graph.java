@@ -1,8 +1,13 @@
-package cs6301.g00;
+package cs6301.g44;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
+import cs6301.g44.ArrayIterator;
+import cs6301.g44.Graph.Edge;
+import cs6301.g44.Graph.Vertex;
+
 
 public class Graph implements Iterable<Graph.Vertex> {
     public Vertex[] v; // vertices of graph
@@ -20,8 +25,15 @@ public class Graph implements Iterable<Graph.Vertex> {
 	public List<Edge> adj, revAdj; // adjacency list; use LinkedList or ArrayList
 	public boolean visited;
 	public int inDegree;
-	public int distance;
+	public int distance;   
+	public int prevDistance;
 	public Vertex parent;
+	public Vertex BFSparent;
+	boolean sptSet;  //used in shortest path algorithm (special set)
+	boolean disabled;   //if vertex is disabled or not
+	public int reward;
+	public int count;  //used in bellman ford algo
+	
 
 	/**
 	 * Constructor for vertex
@@ -31,6 +43,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 	 */
 	public Vertex(int n) {
 	    name = n;
+	    disabled = false;
 	    adj = new LinkedList<Edge>();
 	    revAdj = new LinkedList<Edge>();   /* only for directed graphs */
 	}
@@ -41,9 +54,14 @@ public class Graph implements Iterable<Graph.Vertex> {
 	 */
 	public Vertex(Vertex u) {
 	    name = u.name;
+	    disabled = false;
 	    adj = u.adj;
 	    revAdj = u.revAdj;
 	}
+	
+	boolean isDisabled() { return disabled; }
+	
+	void disable() { disabled = true; }
 
 	/**
 	 * Method to get name of a vertex.
@@ -72,7 +90,44 @@ public class Graph implements Iterable<Graph.Vertex> {
 	}
 
 	/** Iterator to go through edges out of vertex */
-	public Iterator<Edge> iterator() { return adj.iterator(); }
+	public Iterator<Edge> iterator() { return new VertexIterator(this); }
+	
+	class VertexIterator implements Iterator<Edge> {
+	    Edge cur;
+	    Iterator<Edge> it;
+	    boolean ready;
+
+	    VertexIterator(Vertex u) {
+		this.it = u.adj.iterator();
+		ready = false;
+	    }
+
+	    public boolean hasNext() {
+		if(ready) { return true; }
+		if(!it.hasNext()) { return false; }
+		cur = it.next();
+		while(cur.isDisabled() && it.hasNext()) {
+		    cur = it.next();
+		}
+		ready = true;
+		return !cur.isDisabled();
+	    }
+
+	    public Edge next() {
+		if(!ready) {
+		    if(!hasNext()) {
+			throw new java.util.NoSuchElementException();
+		    }
+		}
+		ready = false;
+		return cur;
+	    }
+
+	    public void remove() {
+		throw new java.lang.UnsupportedOperationException();
+	    }
+	}
+	
 
 	/** Iterator to go through edges into vertex */
 	public Iterator<Edge> reverseIterator() { return revAdj.iterator(); }
@@ -99,6 +154,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 	Vertex to;   // tail vertex
 	public int weight;  // weight of edge
 	int name;    // name of edge
+	boolean disabled;
 	/**
 	 * Constructor for Edge
 	 * 
@@ -114,6 +170,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 	    to = v;
 	    weight = w;
 	    name = -1;   // This version of constructor is for backward compatibility
+	    disabled = false;
 	}
 
 	/** New constructor of Edge that sets name of edge also
@@ -123,6 +180,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 	    to = v;
 	    weight = w;
 	    name = n;
+	    disabled = false;
 	}
 
 	/** New constructor of Edge for extended edge classes
@@ -132,7 +190,12 @@ public class Graph implements Iterable<Graph.Vertex> {
             to = e.to;
             weight = e.weight;
             name = e.name;
+            disabled = false;
         }
+	
+	boolean isDisabled() {
+		return disabled || from.isDisabled() || to.isDisabled();
+	    }
 
 	/** Method to get vertex incident to edge at "from" end */
 	public Vertex fromVertex() {
@@ -279,9 +342,12 @@ public class Graph implements Iterable<Graph.Vertex> {
 	if(directed) {
 	    from.adj.add(e);
             to.revAdj.add(e);
+            to.inDegree++;
 	} else {
 	    from.adj.add(e);
 	    to.adj.add(e);
+	    to.inDegree++;
+	    from.inDegree++;
 	}
 	m++;  // Increment edge count
 	return e;
@@ -293,9 +359,12 @@ public class Graph implements Iterable<Graph.Vertex> {
 	if(directed) {
 	    from.adj.add(e);
             to.revAdj.add(e);
+            to.inDegree++;
 	} else {
 	    from.adj.add(e);
 	    to.adj.add(e);
+	    to.inDegree++;
+	    from.inDegree++;
 	}
 	m++;  // Increment edge count
 	return e;
@@ -344,10 +413,37 @@ public class Graph implements Iterable<Graph.Vertex> {
     /**
      * Method to create iterator for vertices of graph
      */
-    public Iterator<Vertex> iterator() {
-	return new ArrayIterator<Vertex>(vertex);
-    }
 
+    public Iterator<Vertex> iterator() { return new GraphIterator(this); }
+
+    class GraphIterator implements Iterator<Vertex> {
+	Iterator<Vertex> it;
+	Vertex xcur;
+	
+	GraphIterator(Graph xg) {
+	    this.it = new ArrayIterator<Vertex>(xg.v, 0, xg.size()-1);  // Iterate over existing elements only
+	}
+	
+	public boolean hasNext() {
+	    if(!it.hasNext()) { return false; }
+	    xcur = it.next();
+	    while(xcur.isDisabled() && it.hasNext()) {
+		xcur = it.next();
+	    }
+	    return !xcur.isDisabled();
+	}
+
+	public Vertex next() {
+	    return xcur;
+	}
+
+	public void remove() {
+	}
+	    
+    }
+    
+    
+	
     // read a directed graph using the Scanner interface
     public static Graph readDirectedGraph(Scanner in) {
 	return readGraph(in, true);
