@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import cs6301.g44.ArrayIterator;
-import cs6301.g44.Graph.Edge;
-import cs6301.g44.Graph.Vertex;
 
 
 public class Graph implements Iterable<Graph.Vertex> {
@@ -28,11 +26,12 @@ public class Graph implements Iterable<Graph.Vertex> {
 	public int distance;   
 	public int prevDistance;
 	public Vertex parent;
-	public Vertex BFSparent;
 	boolean sptSet;  //used in shortest path algorithm (special set)
 	boolean disabled;   //if vertex is disabled or not
-	public int reward;
+	public int reward; //used in part f
 	public int count;  //used in bellman ford algo
+	public boolean seen; //used for bfs of part f
+	public long topCount; //used in part c
 	
 
 	/**
