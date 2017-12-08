@@ -1,8 +1,3 @@
-
-/**  LP 1: Program which implements the Num class
- *   @author Akshay Rawat, Amrut Suresh , Gokul Surendra, Vinayaka Raju Gopal
- * 
- */
 package cs6301.g44;
 
 import java.util.Collections;
@@ -304,9 +299,14 @@ public class Num  implements Comparable<Num> {
     		}
     		
     	//Removing leading zeroes
+    		if(subRes.size()>1)
     	while(subRes.getLast()==0)
     	{
     		subRes.removeLast();
+    		if(subRes.size()>1)
+    			continue;
+    		else
+    			break;
     	}
     		
         		Collections.reverse(subRes);
@@ -442,7 +442,7 @@ public class Num  implements Comparable<Num> {
     	long carry=0;
     	int count=-1;
     	LinkedList<Long> multRes=new LinkedList<Long>();
-		LinkedList<Long> temp=new LinkedList<>();
+		LinkedList<Long> temp=new LinkedList<Long>();
     	for(int i=0;i<a.numberList.size();i++)   //loop through digits of number a
 		{
 			count++;
@@ -476,24 +476,19 @@ public class Num  implements Comparable<Num> {
     }
     
     // Use divide and conquer to find power
-    static Num power(Num a, long y) {
-    	Num result=new Num(1);     // Initialize result
-    	 
-        while (y > 0)
-        {
-            // multiply x with result if y is odd
-            if (y %2 !=0)
-            {
-            	//System.out.println("re");
-            	result = Num.product(result, a);
-            }
-                
-     
-            // y is even now
-            y = y/2; 
-            a=Num.product(a, a);  // Change x to x^2
-        }
-        return result;
+    static Num power(Num x,long n)
+    {
+    	if(n==0) return new Num(1);
+    	else if(n==1) return x;
+    	else
+    	{
+    		Num s=power(x,n/2);
+    		if(n%2==0)
+    			return Num.product(s, s);
+    		else
+    			return Num.product(x, Num.product(s, s));
+    	}
+    	
     }
    
     /* End of Level 1 */
@@ -543,37 +538,28 @@ public class Num  implements Comparable<Num> {
     }
 
     // Use divide and conquer
-    static Num power(Num x, Num n) {
-    	Num result=new Num(1);     // Initialize result
-    	Num p=n,z=x;
-    	
-        while (p.compareTo(new Num(0)) == 1)
-        {
-            // multiply x with result if y is odd
-            if ( Num.mod(p, new Num(2)).compareTo(new Num(0)) != 0)
-                result = Num.product(result, x);
-     
-            // y is even now
-            p = Num.divide(p,new Num(2)); 
-            x = Num.product(x, x);  // Change x to x^2
-        }
-        
-        if ( Num.mod(n, new Num(2)).compareTo(new Num(0)) != 0)//if power is odd and number is negative result must be negative
-    		result.sign=z.sign;
-       //System.out.println(result.numberList);
-        return result;
-    }
+	 static Num power(Num x, Num n) {
+	    	if(n.compareTo(new Num(0))==0) return new Num(1);
+	    	else if(n.compareTo(new Num(1))==0) return x;
+	    	else{
+	    		Num s=power(x, Num.divide(n,new Num(2)));
+	    		if(Num.mod(n, new Num(2)).compareTo(new Num(0))==0)
+	    			return Num.product(s, s);
+	    		else
+	    			return Num.product(x,Num.product(s, s));
+	    	}
+	    }
     
     static Num squareRoot(Num a) {
     	
     	if(a.compareTo(new Num(0))==0 || a.compareTo(new Num(1))==0)
     		return a;
     	Num start=new Num(1);
-    	Num end=a,ans=new Num(0);
+    	Num end=divideByTwo(a),ans=new Num(0);
     	while(start.compareTo(end)!=1)
     	{
     		Num mid=Num.add(start, end);        //finding (start+end)/2
-    		mid=Num.divide(mid, new Num(2));
+    		mid=divideByTwo(mid);
     		Num prod=Num.product(mid, mid);
     		
     		if(prod.compareTo(a)==0)
@@ -587,8 +573,6 @@ public class Num  implements Comparable<Num> {
     		else
     			end=Num.subtract(mid, new Num(1));
     	}
-    	
-    	
 	return ans;
     }
     /* End of Level 2 */
